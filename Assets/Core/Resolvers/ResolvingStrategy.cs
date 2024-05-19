@@ -1,9 +1,8 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace Assets.Core
 {
-    internal class ResolversProvider
+    internal class ResolvingStrategy
     {
         private const BindingFlags FLAGS = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
@@ -13,7 +12,7 @@ namespace Assets.Core
         private readonly InstancesProvider _instancesStorage;
         private readonly FieldResolver _fieldResolver;
 
-        public ResolversProvider(InstancesProvider instancesStorage)
+        public ResolvingStrategy(InstancesProvider instancesStorage)
         {
             _genericMethodsProvider = new GenericMethodsProvider();
             _settersProvider = new SettersProvider();

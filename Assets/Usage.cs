@@ -30,7 +30,7 @@ namespace Assets
             injected2.Inject();
             injected3.Inject();
 
-            int instancesCount = 100;
+            int instancesCount = 1000;
             var _testClasses = Enumerable.Repeat(new TestClass(), instancesCount).ToList();
 
             Stopwatch timer = new Stopwatch();

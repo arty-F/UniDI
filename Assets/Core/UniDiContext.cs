@@ -7,14 +7,14 @@ namespace Assets.Core
     {
         public static UniDIContext Instance;
 
-        private ResolversProvider _resolversProvider;
+        private ResolvingStrategy _resolversProvider;
         private InstancesProvider _instancesProvider;
 
         private void Awake()
         {
             Instance = this;
             _instancesProvider = new InstancesProvider();
-            _resolversProvider = new ResolversProvider(_instancesProvider);
+            _resolversProvider = new ResolvingStrategy(_instancesProvider);
         }
 
         public void Resolve(object consumer)
