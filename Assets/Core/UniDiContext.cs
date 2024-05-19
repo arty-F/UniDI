@@ -3,26 +3,28 @@
 namespace Assets.Core
 {
     [DefaultExecutionOrder(-1000)]
-    public class UniDiContext : MonoBehaviour
+    public class UniDIContext : MonoBehaviour
     {
-        public static UniDiContext Instance;
+        public static UniDIContext Instance;
 
-        private DelegatesResolver _resolver;
+        private ResolversProvider _resolversProvider;
+        private InstancesProvider _instancesProvider;
 
         private void Awake()
         {
             Instance = this;
-            _resolver= new DelegatesResolver();
+            _instancesProvider = new InstancesProvider();
+            _resolversProvider = new ResolversProvider(_instancesProvider);
         }
 
         public void Resolve(object consumer)
         {
-            _resolver.Resolve(consumer);
+            _resolversProvider.Resolve(consumer);
         }
 
         public void Inject<I>(I injected)
         {
-            _resolver.Inject(injected);
+            _instancesProvider.Store(injected);
         }
     }
 }
