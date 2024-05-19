@@ -9,6 +9,9 @@
         private InjectedClass2 _field2;
 
         [Inject]
+        private InjectedClass3 _field3;
+
+        [Inject]
         public InjectedClass1 Property { get; set; }
 
         private InjectedClass1 _injectedFromMethod;
@@ -24,6 +27,6 @@
         public string GetProperty() => Property?.Name ?? "empty";
         public string GetMethod() => _injectedFromMethod?.Name ?? "empty";
 
-        public int GetSum() => _field1.Value + _field2.Value;
+        public int GetSum() => _field1.Value + _field2.Value + _field3.Value;
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Assets.Core
+﻿using System.Runtime.CompilerServices;
+
+namespace Assets.Core
 {
     public static class Extensions
     {

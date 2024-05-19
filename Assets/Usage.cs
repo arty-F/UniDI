@@ -25,8 +25,10 @@ namespace Assets
 
             var injected1 = new InjectedClass1();
             var injected2 = new InjectedClass2();
+            var injected3 = new InjectedClass3();
             injected1.Inject();
             injected2.Inject();
+            injected3.Inject();
 
             int instancesCount = 100;
             var _testClasses = Enumerable.Repeat(new TestClass(), instancesCount).ToList();

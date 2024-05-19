@@ -15,11 +15,11 @@ namespace Assets.Core
 
         public ResolversProvider(InstancesProvider instancesStorage)
         {
-            _genericMethodsProvider = new GenericMethodsProvider(FLAGS);
+            _genericMethodsProvider = new GenericMethodsProvider();
             _settersProvider = new SettersProvider();
             _memberInfoStorage = new MemberInfoProvider(FLAGS);
             _instancesStorage = instancesStorage;
-            _fieldResolver = new FieldResolver(_genericMethodsProvider, _memberInfoStorage, _settersProvider, _instancesStorage);
+            _fieldResolver = new FieldResolver(_genericMethodsProvider, _memberInfoStorage, _settersProvider, _instancesStorage, FLAGS);
         }
 
         internal void Resolve(object consumer)

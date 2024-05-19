@@ -9,7 +9,7 @@ namespace Assets.Core
         private readonly MemberInfoProvider _memberInfoStorage;
         private readonly SettersProvider _settersProvider;
         private readonly InstancesProvider _instancesStorage;
-        private readonly string _resolveMethodName;
+        private readonly MethodInfo _baseResolveMethod;
 
         private object[] _tempResolveParams = new object[2];
 
@@ -17,13 +17,14 @@ namespace Assets.Core
             GenericMethodsProvider genericMethodsProvider, 
             MemberInfoProvider memberInfoStorage, 
             SettersProvider settersProvider, 
-            InstancesProvider instancesProvider)
+            InstancesProvider instancesProvider,
+            BindingFlags flags)
         {
             _genericMethodsProvider = genericMethodsProvider;
             _memberInfoStorage = memberInfoStorage;
             _settersProvider = settersProvider;
             _instancesStorage = instancesProvider;
-            _resolveMethodName = nameof(ResolveField);
+            _baseResolveMethod = GetType().GetMethod(nameof(ResolveField), flags);
         }
 
         public void Resolve(object consumer, Type consumerType)
@@ -32,7 +33,7 @@ namespace Assets.Core
             var injectedFields = _memberInfoStorage.GetFieldInfos(consumerType);
             foreach (var injectedField in injectedFields)
             {
-                var resolveFieldMethod = _genericMethodsProvider.GetResolveFieldMethod(this, _resolveMethodName, consumerType, injectedField);
+                var resolveFieldMethod = _genericMethodsProvider.GetResolveFieldMethod(_baseResolveMethod, consumerType, injectedField);
                 _tempResolveParams[1] = injectedField;
                 resolveFieldMethod.Invoke(this, _tempResolveParams);
             }
