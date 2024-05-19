@@ -7,19 +7,19 @@ namespace Assets.Core
     {
         public static UniDIContext Instance;
 
-        private ResolvingStrategy _resolversProvider;
+        private ResolvingStrategy _resolvingStrategy;
         private InstancesProvider _instancesProvider;
 
         private void Awake()
         {
             Instance = this;
             _instancesProvider = new InstancesProvider();
-            _resolversProvider = new ResolvingStrategy(_instancesProvider);
+            _resolvingStrategy = new ResolvingStrategy(_instancesProvider);
         }
 
         public void Resolve(object consumer)
         {
-            _resolversProvider.Resolve(consumer);
+            _resolvingStrategy.Resolve(consumer);
         }
 
         public void Inject<I>(I injected)
