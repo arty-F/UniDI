@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Core.Utils;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +25,10 @@ namespace Assets.Core
 
         internal I GetInstance<I>(Type type)
         {
+            if (!_storedInstancesMap.ContainsKey(type))
+            {
+                throw new UniDIException($"Type of {type.Name} has not yet been injected.");
+            }
             return (I)_storedInstancesMap[type];
         }
     }

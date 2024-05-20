@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Assets.Core
+namespace Assets.Core.Resolvers
 {
-    internal class FieldResolver
+    internal class PropertyResolver
     {
         private readonly GenericMethodsProvider _genericMethodsProvider;
         private readonly MemberInfoProvider _memberInfoStorage;
@@ -13,10 +13,10 @@ namespace Assets.Core
 
         private object[] _tempResolveParams = new object[2];
 
-        public FieldResolver(
-            GenericMethodsProvider genericMethodsProvider, 
-            MemberInfoProvider memberInfoStorage, 
-            SettersProvider settersProvider, 
+        public PropertyResolver(
+            GenericMethodsProvider genericMethodsProvider,
+            MemberInfoProvider memberInfoStorage,
+            SettersProvider settersProvider,
             InstancesProvider instancesProvider,
             BindingFlags flags)
         {
@@ -24,24 +24,24 @@ namespace Assets.Core
             _memberInfoStorage = memberInfoStorage;
             _settersProvider = settersProvider;
             _instancesStorage = instancesProvider;
-            _baseResolveMethod = GetType().GetMethod(nameof(ResolveField), flags);
+            _baseResolveMethod = GetType().GetMethod(nameof(ResolveProperty), flags);
         }
 
         public void Resolve(object consumer, Type consumerType)
         {
             _tempResolveParams[0] = consumer;
-            var injectedFields = _memberInfoStorage.GetFieldInfos(consumerType);
-            foreach (var injectedField in injectedFields)
+            var injectedProperties = _memberInfoStorage.GetPropertyInfos(consumerType);
+            foreach (var injectedProperty in injectedProperties)
             {
-                var resolveFieldMethod = _genericMethodsProvider.GetResolveFieldMethod(_baseResolveMethod, consumerType, injectedField);
-                _tempResolveParams[1] = injectedField;
-                resolveFieldMethod.Invoke(this, _tempResolveParams);
+                var resolvePropertyMethod = _genericMethodsProvider.GetResolvePropertyMethod(_baseResolveMethod, consumerType, injectedProperty);
+                _tempResolveParams[1] = injectedProperty;
+                resolvePropertyMethod.Invoke(this, _tempResolveParams);
             }
         }
 
-        private void ResolveField<C, I>(C consumer, FieldInfo fieldInfo)
+        private void ResolveProperty<C, I>(C consumer, PropertyInfo prpertyInfo)
         {
-            var setter = _settersProvider.GetFieldSetter<C, I>(fieldInfo);
+            var setter = _settersProvider.GetPropertySetter<C, I>(prpertyInfo);
             setter(consumer, _instancesStorage.GetInstance<I>(typeof(I)));
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Assets.Core.Resolvers;
+using System.Reflection;
 
 namespace Assets.Core
 {
@@ -11,6 +12,7 @@ namespace Assets.Core
         private readonly MemberInfoProvider _memberInfoStorage;
         private readonly InstancesProvider _instancesStorage;
         private readonly FieldResolver _fieldResolver;
+        private readonly PropertyResolver _propertyResolver;
 
         public ResolvingStrategy(InstancesProvider instancesStorage)
         {
@@ -19,12 +21,14 @@ namespace Assets.Core
             _memberInfoStorage = new MemberInfoProvider(FLAGS);
             _instancesStorage = instancesStorage;
             _fieldResolver = new FieldResolver(_genericMethodsProvider, _memberInfoStorage, _settersProvider, _instancesStorage, FLAGS);
+            _propertyResolver = new PropertyResolver(_genericMethodsProvider, _memberInfoStorage, _settersProvider, _instancesStorage, FLAGS);
         }
 
         internal void Resolve(object consumer)
         {
             var consumerType = consumer.GetType();
             _fieldResolver.Resolve(consumer, consumerType);
+            _propertyResolver.Resolve(consumer, consumerType);
         }
     }
 }

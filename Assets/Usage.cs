@@ -39,10 +39,10 @@ namespace Assets
             foreach (var testClass in _testClasses)
             {
                 testClass.Resolve();
-                accumulator += testClass.GetSum();
+                accumulator += testClass.GetSumField();
             }
             timer.Stop();
-            UnityEngine.Debug.Log($"{accumulator} accumulated in: {timer.ElapsedMilliseconds} мс." );
+            UnityEngine.Debug.Log($"{accumulator} accumulated in: {timer.ElapsedMilliseconds} ms." );
         }
     }
 }
