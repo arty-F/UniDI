@@ -1,5 +1,4 @@
-﻿using Assets.Core.Providers;
-using Assets.Core.Utils;
+﻿using Assets.Core.Utils;
 using System;
 using System.Reflection;
 
@@ -12,7 +11,6 @@ namespace Assets.Core.Resolvers
         private readonly MemberInfoProvider _memberInfoProvider;
         private readonly SettersProvider _settersProvider;
         private readonly InstancesProvider _instancesProvider;
-        private readonly ResolvingStopListProvider _resolvingStopListProvider;
         private readonly MethodInfo _baseResolveMethod;
 
         private readonly object[] _tempResolveParams = new object[2];
@@ -24,21 +22,14 @@ namespace Assets.Core.Resolvers
             _memberInfoProvider = providersDto.MemberInfoProvider;
             _settersProvider = providersDto.SettersProvider;
             _instancesProvider = providersDto.InstancesProvider;
-            _resolvingStopListProvider = providersDto.ResolvingStopListProvider;
             _baseResolveMethod = GetType().GetMethod(nameof(ResolveProperty), flags);
         }
 
         public void Resolve(object consumer, Type consumerType)
         {
-            if (_resolvingStopListProvider.IsResolvingStoped(_resolvingType, consumerType))
-            {
-                return;
-            }
-
             var injectedProperties = _memberInfoProvider.GetPropertyInfos(consumerType);
             if (injectedProperties.Length == 0)
             {
-                _resolvingStopListProvider.StopResolving(_resolvingType, consumerType);
                 return;
             }
 

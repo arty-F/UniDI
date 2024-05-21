@@ -13,5 +13,7 @@ namespace Assets.Core
         {
             UniDIContext.Instance.Inject(injected);
         }
+
+        //TODO Instantiate
     }
 }

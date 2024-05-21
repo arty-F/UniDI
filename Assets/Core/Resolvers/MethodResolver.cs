@@ -13,7 +13,6 @@ namespace Assets.Core.Resolvers
         private readonly MemberInfoProvider _memberInfoProvider;
         private readonly InstancesProvider _instancesProvider;
         private readonly ParameterTypesProvider _parameterTypesProvider;
-        private readonly ResolvingStopListProvider _resolvingStopListProvider;
         private readonly MethodInfo _baseGetParameterMethod;
         private readonly Dictionary<MethodInfo, object[]> _methodParametersMap = new();
 
@@ -24,21 +23,14 @@ namespace Assets.Core.Resolvers
             _memberInfoProvider = providersDto.MemberInfoProvider;
             _instancesProvider = providersDto.InstancesProvider;
             _parameterTypesProvider= providersDto.ParameterTypesProvider;
-            _resolvingStopListProvider = providersDto.ResolvingStopListProvider;
             _baseGetParameterMethod = GetType().GetMethod(nameof(GetParameterInstance), flags);
         }
 
         public void Resolve(object consumer, Type consumerType)
         {
-            if (_resolvingStopListProvider.IsResolvingStoped(_resolvingType, consumerType))
-            {
-                return;
-            }
-
             var injectedMethods = _memberInfoProvider.GetMethodInfos(consumerType);
             if (injectedMethods.Length == 0)
             {
-                _resolvingStopListProvider.StopResolving(_resolvingType, consumerType);
                 return;
             }
 

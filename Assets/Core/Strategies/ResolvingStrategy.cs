@@ -14,7 +14,6 @@ namespace Assets.Core
         private readonly MemberInfoProvider _memberInfoProvider;
         private readonly InstancesProvider _instancesProvider;
         private readonly ParameterTypesProvider _parameterTypesProvider;
-        private readonly ResolvingStopListProvider _resolvingStopListProvider;
         private readonly FieldResolver _fieldResolver;
         private readonly PropertyResolver _propertyResolver;
         private readonly MethodResolver _methodResolver;
@@ -26,10 +25,8 @@ namespace Assets.Core
             _memberInfoProvider = new MemberInfoProvider(FLAGS);
             _instancesProvider = instancesStorage;
             _parameterTypesProvider = new ParameterTypesProvider();
-            _resolvingStopListProvider = new ResolvingStopListProvider();
 
-            var providersDto = new ProvidersDto(_genericMethodsProvider, _settersProvider, _memberInfoProvider, _instancesProvider, 
-                _parameterTypesProvider, _resolvingStopListProvider);
+            var providersDto = new ProvidersDto(_genericMethodsProvider, _settersProvider, _memberInfoProvider, _instancesProvider, _parameterTypesProvider);
             _fieldResolver = new FieldResolver(ResolvingType.Field, providersDto, FLAGS);
             _propertyResolver = new PropertyResolver(ResolvingType.Property, providersDto, FLAGS);
             _methodResolver = new MethodResolver(ResolvingType.Method, providersDto, FLAGS);
