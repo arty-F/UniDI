@@ -2,38 +2,43 @@
 {
     public class TestClass
     {
-        [Inject]
+        //[Inject]
         private InjectedClass1 _field1;
 
-        [Inject]
+        //[Inject]
         private InjectedClass2 _field2;
 
-        [Inject]
+        //[Inject]
         private InjectedClass3 _field3;
 
-        [Inject]
+        //[Inject]
         public InjectedClass1 Property1 { get; private set; }
 
-        [Inject]
+        //[Inject]
         public InjectedClass2 Property2 { get; private set; }
 
-        [Inject]
+        //[Inject]
         public InjectedClass3 Property3 { get; private set; }
 
-        private InjectedClass1 _injectedFromMethod;
+        private InjectedClass1 _injectedFromMethod1;
+        private InjectedClass2 _injectedFromMethod2;
+        private InjectedClass3 _injectedFromMethod3;
 
         [Inject]
-        public void Method(InjectedClass1 injected)
+        public void Method(InjectedClass1 injected1, InjectedClass2 injected2, InjectedClass3 injected3)
         {
-            _injectedFromMethod = injected;
+            _injectedFromMethod1 = injected1;
+            _injectedFromMethod2 = injected2;
+            _injectedFromMethod3 = injected3;
         }
 
         public string GetField1() => _field1?.Name ?? "empty";
         public string GetField2() => _field2?.Name ?? "empty";
         public string GetProperty() => Property1?.Name ?? "empty";
-        public string GetMethod() => _injectedFromMethod?.Name ?? "empty";
+        //public string GetMethod() => _injectedFromMethod?.Name ?? "empty";
 
         public int GetSumField() => _field1.Value + _field2.Value + _field3.Value;
         public int GetSumProp() => Property1.Value + Property2.Value + Property3.Value;
+        public int GetSumMethod() => _injectedFromMethod1.Value + _injectedFromMethod2.Value + _injectedFromMethod3.Value;
     }
 }

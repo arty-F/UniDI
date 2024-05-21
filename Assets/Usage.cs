@@ -39,7 +39,7 @@ namespace Assets
             foreach (var testClass in _testClasses)
             {
                 testClass.Resolve();
-                accumulator += testClass.GetSumField();
+                accumulator += testClass.GetSumMethod();
             }
             timer.Stop();
             UnityEngine.Debug.Log($"{accumulator} accumulated in: {timer.ElapsedMilliseconds} ms." );

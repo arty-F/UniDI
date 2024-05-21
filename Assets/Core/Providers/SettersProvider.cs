@@ -7,9 +7,9 @@ namespace Assets.Core
 {
     internal class SettersProvider
     {
-        private Dictionary<FieldInfo, object> _fieldSetters = new();
-        private Dictionary<MethodInfo, object> _methodSetters = new();
-        private Dictionary<PropertyInfo, object> _propertySetters = new();
+        private readonly Dictionary<FieldInfo, object> _fieldSetters = new();
+        private readonly Dictionary<MethodInfo, object> _methodSetters = new();
+        private readonly Dictionary<PropertyInfo, object> _propertySetters = new();
 
         internal Action<C, I> GetFieldSetter<C, I>(FieldInfo field)
         {

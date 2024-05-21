@@ -14,7 +14,9 @@ namespace Assets.Core
             var type = typeof(I);
             if (_storedInstancesMap.ContainsKey(type))
             {
+#if UNITY_EDITOR
                 Debug.Log($"Type {type.Name} are reinjected.");
+#endif
                 _storedInstancesMap[type] = injected;
             }
             else

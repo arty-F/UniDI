@@ -11,14 +11,17 @@ namespace Assets.Core
         private readonly BindingFlags _flags;
         private readonly Dictionary<Type, FieldInfo[]> _fieldInfoMap = new();
         private readonly Dictionary<Type, PropertyInfo[]> _propertyInfoMap = new();
+        private readonly Dictionary<Type, MethodInfo[]> _methodInfoMap = new();
         private readonly List<FieldInfo> _tempFieldsInfo;
         private readonly List<PropertyInfo> _tempPropertiesInfo;
+        private readonly List<MethodInfo> _tempMethodsInfo;
 
         public MemberInfoProvider(BindingFlags flags, int tempListSize = TEMP_LIST_SIZE)
         {
             _flags = flags;
             _tempFieldsInfo = new(tempListSize);
             _tempPropertiesInfo = new(tempListSize);
+            _tempMethodsInfo= new(tempListSize);
         }
 
         internal FieldInfo[] GetFieldInfos(Type consumerType)
@@ -41,6 +44,17 @@ namespace Assets.Core
                 _propertyInfoMap.Add(consumerType, injectedProperties);
             }
             return injectedProperties;
+        }
+
+        internal MethodInfo[] GetMethodInfos(Type consumerType)
+        {
+            MethodInfo[] injectedMethods;
+            if (!_methodInfoMap.TryGetValue(consumerType, out injectedMethods))
+            {
+                injectedMethods = GetInjectedMethods(consumerType);
+                _methodInfoMap.Add(consumerType, injectedMethods);
+            }
+            return injectedMethods;
         }
 
         private FieldInfo[] GetInjectedFields(Type consumerType)
@@ -72,6 +86,22 @@ namespace Assets.Core
 
             var result = _tempPropertiesInfo.ToArray();
             _tempFieldsInfo.Clear();
+            return result;
+        }
+
+        private MethodInfo[] GetInjectedMethods(Type consumerType)
+        {
+            var methods = consumerType.GetMethods(_flags);
+            foreach (var method in methods)
+            {
+                if (method.GetCustomAttribute<Inject>() != null)
+                {
+                    _tempMethodsInfo.Add(method);
+                }
+            }
+
+            var result = _tempMethodsInfo.ToArray();
+            _tempMethodsInfo.Clear();
             return result;
         }
     }

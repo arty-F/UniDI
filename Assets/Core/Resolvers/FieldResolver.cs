@@ -6,31 +6,31 @@ namespace Assets.Core
     internal class FieldResolver
     {
         private readonly GenericMethodsProvider _genericMethodsProvider;
-        private readonly MemberInfoProvider _memberInfoStorage;
+        private readonly MemberInfoProvider _memberInfoProvider;
         private readonly SettersProvider _settersProvider;
-        private readonly InstancesProvider _instancesStorage;
+        private readonly InstancesProvider _instancesProvider;
         private readonly MethodInfo _baseResolveMethod;
 
-        private object[] _tempResolveParams = new object[2];
+        private readonly object[] _tempResolveParams = new object[2];
 
         public FieldResolver(
             GenericMethodsProvider genericMethodsProvider, 
-            MemberInfoProvider memberInfoStorage, 
+            MemberInfoProvider memberInfoProvider, 
             SettersProvider settersProvider, 
             InstancesProvider instancesProvider,
             BindingFlags flags)
         {
             _genericMethodsProvider = genericMethodsProvider;
-            _memberInfoStorage = memberInfoStorage;
+            _memberInfoProvider = memberInfoProvider;
             _settersProvider = settersProvider;
-            _instancesStorage = instancesProvider;
+            _instancesProvider = instancesProvider;
             _baseResolveMethod = GetType().GetMethod(nameof(ResolveField), flags);
         }
 
         public void Resolve(object consumer, Type consumerType)
         {
+            var injectedFields = _memberInfoProvider.GetFieldInfos(consumerType);
             _tempResolveParams[0] = consumer;
-            var injectedFields = _memberInfoStorage.GetFieldInfos(consumerType);
             foreach (var injectedField in injectedFields)
             {
                 var resolveFieldMethod = _genericMethodsProvider.GetResolveFieldMethod(_baseResolveMethod, consumerType, injectedField);
@@ -42,7 +42,7 @@ namespace Assets.Core
         private void ResolveField<C, I>(C consumer, FieldInfo fieldInfo)
         {
             var setter = _settersProvider.GetFieldSetter<C, I>(fieldInfo);
-            setter(consumer, _instancesStorage.GetInstance<I>(typeof(I)));
+            setter(consumer, _instancesProvider.GetInstance<I>(typeof(I)));
         }
     }
 }

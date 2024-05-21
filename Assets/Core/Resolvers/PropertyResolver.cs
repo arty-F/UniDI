@@ -6,31 +6,31 @@ namespace Assets.Core.Resolvers
     internal class PropertyResolver
     {
         private readonly GenericMethodsProvider _genericMethodsProvider;
-        private readonly MemberInfoProvider _memberInfoStorage;
+        private readonly MemberInfoProvider _memberInfoProvider;
         private readonly SettersProvider _settersProvider;
-        private readonly InstancesProvider _instancesStorage;
+        private readonly InstancesProvider _instancesProvider;
         private readonly MethodInfo _baseResolveMethod;
 
-        private object[] _tempResolveParams = new object[2];
+        private readonly object[] _tempResolveParams = new object[2];
 
         public PropertyResolver(
             GenericMethodsProvider genericMethodsProvider,
-            MemberInfoProvider memberInfoStorage,
+            MemberInfoProvider memberInfoProvider,
             SettersProvider settersProvider,
             InstancesProvider instancesProvider,
             BindingFlags flags)
         {
             _genericMethodsProvider = genericMethodsProvider;
-            _memberInfoStorage = memberInfoStorage;
+            _memberInfoProvider = memberInfoProvider;
             _settersProvider = settersProvider;
-            _instancesStorage = instancesProvider;
+            _instancesProvider = instancesProvider;
             _baseResolveMethod = GetType().GetMethod(nameof(ResolveProperty), flags);
         }
 
         public void Resolve(object consumer, Type consumerType)
         {
             _tempResolveParams[0] = consumer;
-            var injectedProperties = _memberInfoStorage.GetPropertyInfos(consumerType);
+            var injectedProperties = _memberInfoProvider.GetPropertyInfos(consumerType);
             foreach (var injectedProperty in injectedProperties)
             {
                 var resolvePropertyMethod = _genericMethodsProvider.GetResolvePropertyMethod(_baseResolveMethod, consumerType, injectedProperty);
@@ -42,7 +42,7 @@ namespace Assets.Core.Resolvers
         private void ResolveProperty<C, I>(C consumer, PropertyInfo prpertyInfo)
         {
             var setter = _settersProvider.GetPropertySetter<C, I>(prpertyInfo);
-            setter(consumer, _instancesStorage.GetInstance<I>(typeof(I)));
+            setter(consumer, _instancesProvider.GetInstance<I>(typeof(I)));
         }
     }
 }

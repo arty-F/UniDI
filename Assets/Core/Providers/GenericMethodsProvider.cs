@@ -6,7 +6,11 @@ namespace Assets.Core
 {
     internal class GenericMethodsProvider
     {
-        private Dictionary<Tuple<MethodInfo, Type, Type>, MethodInfo> _resolveFieldsMethodsMap = new();
+        private readonly Dictionary<Tuple<MethodInfo, Type, Type>, MethodInfo> _twoTParameterMap = new();
+        private readonly Dictionary<Tuple<MethodInfo, Type>, MethodInfo> _oneTParameterMap = new();
+
+        private readonly Type[] _tempTwoParameters = new Type[2];
+        private readonly Type[] _tempOneParameters = new Type[1];
 
         internal MethodInfo GetResolveFieldMethod(MethodInfo baseResolveMethod, Type consumer, FieldInfo injectedField)
         {
@@ -18,14 +22,35 @@ namespace Assets.Core
             return GetResolveMethod(baseResolveMethod, consumer, injectedProperty.PropertyType);
         }
 
+        internal MethodInfo GetParameterInstanceMethod(MethodInfo baseResolveMethod, Type parameterType)
+        {
+            return GetResolveMethod(baseResolveMethod, parameterType);
+        }
+
         private MethodInfo GetResolveMethod(MethodInfo baseResolveMethod, Type consumer, Type injected)
         {
             MethodInfo genericMethod;
             Tuple<MethodInfo, Type, Type> key = Tuple.Create(baseResolveMethod, consumer, injected);
-            if (!_resolveFieldsMethodsMap.TryGetValue(key, out genericMethod))
+            if (!_twoTParameterMap.TryGetValue(key, out genericMethod))
             {
-                genericMethod = baseResolveMethod.MakeGenericMethod(new Type[] { consumer, injected });
-                _resolveFieldsMethodsMap.Add(key, genericMethod);
+                _tempTwoParameters[0] = consumer;
+                _tempTwoParameters[1] = injected;
+                genericMethod = baseResolveMethod.MakeGenericMethod(_tempTwoParameters);
+                _twoTParameterMap.Add(key, genericMethod);
+            }
+
+            return genericMethod;
+        }
+
+        private MethodInfo GetResolveMethod(MethodInfo baseResolveMethod, Type injected)
+        {
+            MethodInfo genericMethod;
+            Tuple<MethodInfo, Type> key = Tuple.Create(baseResolveMethod, injected);
+            if (!_oneTParameterMap.TryGetValue(key, out genericMethod))
+            {
+                _tempOneParameters[0] = injected;
+                genericMethod = baseResolveMethod.MakeGenericMethod(_tempOneParameters);
+                _oneTParameterMap.Add(key, genericMethod);
             }
 
             return genericMethod;
