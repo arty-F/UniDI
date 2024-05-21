@@ -265,9 +265,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1249362802}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 772d1cec15d5fee47a2c140f9b578910, type: 3}
+  m_Script: {fileID: 11500000, guid: c2ef0ae79212cb043a023ddef31a4e01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _instancesCount: 100
+  _fieldsConsumer: 1
+  _propertiesConsumer: 1
+  _methodConsumer: 1
+  _allConsumer: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
