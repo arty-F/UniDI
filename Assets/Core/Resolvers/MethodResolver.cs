@@ -40,8 +40,7 @@ namespace Assets.Core.Resolvers
 
         private void ResolveMethod(object consumer, MethodInfo methodInfo)
         {
-            object[] methodParameters;
-            if (!_methodParametersMap.TryGetValue(methodInfo, out methodParameters))
+            if (!_methodParametersMap.TryGetValue(methodInfo, out object[] methodParameters))
             {
                 var injectedParameterTypes = _parameterTypesProvider.GetParameterTypes(methodInfo);
                 methodParameters = new object[injectedParameterTypes.Length];
@@ -53,7 +52,6 @@ namespace Assets.Core.Resolvers
                 }
                 _methodParametersMap.Add(methodInfo, methodParameters);
             }
-
             methodInfo.Invoke(consumer, methodParameters);
         }
 

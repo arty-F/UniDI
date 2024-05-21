@@ -26,8 +26,7 @@ namespace Assets.Core
 
         internal FieldInfo[] GetFieldInfos(Type consumerType)
         {
-            FieldInfo[] injectedFields;
-            if (!_fieldInfoMap.TryGetValue(consumerType, out injectedFields))
+            if (!_fieldInfoMap.TryGetValue(consumerType, out FieldInfo[] injectedFields))
             {
                 injectedFields = GetInjectedFields(consumerType);
                 _fieldInfoMap.Add(consumerType, injectedFields);
@@ -37,8 +36,7 @@ namespace Assets.Core
 
         internal PropertyInfo[] GetPropertyInfos(Type consumerType)
         {
-            PropertyInfo[] injectedProperties;
-            if (!_propertyInfoMap.TryGetValue(consumerType, out injectedProperties))
+            if (!_propertyInfoMap.TryGetValue(consumerType, out PropertyInfo[] injectedProperties))
             {
                 injectedProperties = GetInjectedProperties(consumerType);
                 _propertyInfoMap.Add(consumerType, injectedProperties);
@@ -48,8 +46,7 @@ namespace Assets.Core
 
         internal MethodInfo[] GetMethodInfos(Type consumerType)
         {
-            MethodInfo[] injectedMethods;
-            if (!_methodInfoMap.TryGetValue(consumerType, out injectedMethods))
+            if (!_methodInfoMap.TryGetValue(consumerType, out MethodInfo[] injectedMethods))
             {
                 injectedMethods = GetInjectedMethods(consumerType);
                 _methodInfoMap.Add(consumerType, injectedMethods);

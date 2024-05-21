@@ -29,30 +29,26 @@ namespace Assets.Core
 
         private MethodInfo GetResolveMethod(MethodInfo baseResolveMethod, Type consumer, Type injected)
         {
-            MethodInfo genericMethod;
             Tuple<MethodInfo, Type, Type> key = Tuple.Create(baseResolveMethod, consumer, injected);
-            if (!_twoTParameterMap.TryGetValue(key, out genericMethod))
+            if (!_twoTParameterMap.TryGetValue(key, out MethodInfo genericMethod))
             {
                 _tempTwoParameters[0] = consumer;
                 _tempTwoParameters[1] = injected;
                 genericMethod = baseResolveMethod.MakeGenericMethod(_tempTwoParameters);
                 _twoTParameterMap.Add(key, genericMethod);
             }
-
             return genericMethod;
         }
 
         private MethodInfo GetResolveMethod(MethodInfo baseResolveMethod, Type injected)
         {
-            MethodInfo genericMethod;
             Tuple<MethodInfo, Type> key = Tuple.Create(baseResolveMethod, injected);
-            if (!_oneTParameterMap.TryGetValue(key, out genericMethod))
+            if (!_oneTParameterMap.TryGetValue(key, out MethodInfo genericMethod))
             {
                 _tempOneParameters[0] = injected;
                 genericMethod = baseResolveMethod.MakeGenericMethod(_tempOneParameters);
                 _oneTParameterMap.Add(key, genericMethod);
             }
-
             return genericMethod;
         }
     }

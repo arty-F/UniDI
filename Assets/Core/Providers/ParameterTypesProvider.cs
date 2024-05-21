@@ -10,8 +10,7 @@ namespace Assets.Core.Providers
 
         internal Type[] GetParameterTypes(MethodInfo methodInfo)
         {
-            Type[] injectedParameterTypes;
-            if (!_parameterTypeMap.TryGetValue(methodInfo, out injectedParameterTypes))
+            if (!_parameterTypeMap.TryGetValue(methodInfo, out Type[] injectedParameterTypes))
             {
                 injectedParameterTypes = GetInjectedParameterTypes(methodInfo);
                 _parameterTypeMap.Add(methodInfo, injectedParameterTypes);

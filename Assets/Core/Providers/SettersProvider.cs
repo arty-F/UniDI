@@ -13,8 +13,7 @@ namespace Assets.Core
 
         internal Action<C, I> GetFieldSetter<C, I>(FieldInfo field)
         {
-            object setter;
-            if (!_fieldSetters.TryGetValue(field, out setter))
+            if (!_fieldSetters.TryGetValue(field, out object setter))
             {
                 var methodName = field.ReflectedType.FullName + ".set_" + field.Name;
                 var setterMethod = new DynamicMethod(methodName, null, new Type[2] { typeof(C), typeof(I) }, true);
@@ -34,31 +33,26 @@ namespace Assets.Core
                 setter = setterMethod.CreateDelegate(typeof(Action<C, I>));
                 _fieldSetters.Add(field, setter);
             }
-
             return (Action<C, I>)setter;
         }
 
         internal Action<C, I> GetMethodSetter<C, I>(MethodInfo method)
         {
-            object setter;
-            if (!_methodSetters.TryGetValue(method, out setter))
+            if (!_methodSetters.TryGetValue(method, out object setter))
             {
                 setter = Delegate.CreateDelegate(typeof(Action<C, I>), null, method);
                 _methodSetters.Add(method, setter);
             }
-
             return (Action<C, I>)setter;
         }
 
         internal Action<C, I> GetPropertySetter<C, I>(PropertyInfo property)
         {
-            object setter;
-            if (!_propertySetters.TryGetValue(property, out setter))
+            if (!_propertySetters.TryGetValue(property, out object setter))
             {
                 setter = Delegate.CreateDelegate(typeof(Action<C, I>), null, property.GetSetMethod(true));
                 _propertySetters.Add(property, setter);
             }
-
             return (Action<C, I>)setter;
         }
     }
