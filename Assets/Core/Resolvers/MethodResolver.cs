@@ -1,4 +1,5 @@
 ﻿using Assets.Core.Providers;
+using Assets.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,31 +8,40 @@ namespace Assets.Core.Resolvers
 {
     internal class MethodResolver
     {
+        private ResolvingType _resolvingType;
         private readonly GenericMethodsProvider _genericMethodsProvider;
         private readonly MemberInfoProvider _memberInfoProvider;
         private readonly InstancesProvider _instancesProvider;
         private readonly ParameterTypesProvider _parameterTypesProvider;
+        private readonly ResolvingStopListProvider _resolvingStopListProvider;
         private readonly MethodInfo _baseGetParameterMethod;
         private readonly Dictionary<MethodInfo, object[]> _methodParametersMap = new();
 
-        public MethodResolver(
-            GenericMethodsProvider genericMethodsProvider,
-            MemberInfoProvider memberInfoProvider,
-            InstancesProvider instancesProvider,
-            ParameterTypesProvider parameterTypesProvider,
-            BindingFlags flags)
+        public MethodResolver(ResolvingType resolvingType, ProvidersDto providersDto, BindingFlags flags)
         {
-            _genericMethodsProvider = genericMethodsProvider;
-            _memberInfoProvider = memberInfoProvider;
-            _instancesProvider = instancesProvider;
-            _parameterTypesProvider = parameterTypesProvider;
-            var type = GetType();
-            _baseGetParameterMethod = type.GetMethod(nameof(GetParameterInstance), flags);
+            _resolvingType = resolvingType;
+            _genericMethodsProvider = providersDto.GenericMethodsProvider;
+            _memberInfoProvider = providersDto.MemberInfoProvider;
+            _instancesProvider = providersDto.InstancesProvider;
+            _parameterTypesProvider= providersDto.ParameterTypesProvider;
+            _resolvingStopListProvider = providersDto.ResolvingStopListProvider;
+            _baseGetParameterMethod = GetType().GetMethod(nameof(GetParameterInstance), flags);
         }
 
         public void Resolve(object consumer, Type consumerType)
         {
+            if (_resolvingStopListProvider.IsResolvingStoped(_resolvingType, consumerType))
+            {
+                return;
+            }
+
             var injectedMethods = _memberInfoProvider.GetMethodInfos(consumerType);
+            if (injectedMethods.Length == 0)
+            {
+                _resolvingStopListProvider.StopResolving(_resolvingType, consumerType);
+                return;
+            }
+
             foreach (var injectedMethod in injectedMethods)
             {
                 ResolveMethod(consumer, injectedMethod);

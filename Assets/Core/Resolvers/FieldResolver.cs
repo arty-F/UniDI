@@ -1,35 +1,47 @@
-﻿using System;
+﻿using Assets.Core.Providers;
+using Assets.Core.Utils;
+using System;
 using System.Reflection;
 
 namespace Assets.Core
 {
     internal class FieldResolver
     {
+        private readonly ResolvingType _resolvingType;
         private readonly GenericMethodsProvider _genericMethodsProvider;
         private readonly MemberInfoProvider _memberInfoProvider;
         private readonly SettersProvider _settersProvider;
         private readonly InstancesProvider _instancesProvider;
+        private readonly ResolvingStopListProvider _resolvingStopListProvider;
         private readonly MethodInfo _baseResolveMethod;
 
         private readonly object[] _tempResolveParams = new object[2];
 
-        public FieldResolver(
-            GenericMethodsProvider genericMethodsProvider, 
-            MemberInfoProvider memberInfoProvider, 
-            SettersProvider settersProvider, 
-            InstancesProvider instancesProvider,
-            BindingFlags flags)
+        public FieldResolver(ResolvingType resolvingType, ProvidersDto providersDto, BindingFlags flags)
         {
-            _genericMethodsProvider = genericMethodsProvider;
-            _memberInfoProvider = memberInfoProvider;
-            _settersProvider = settersProvider;
-            _instancesProvider = instancesProvider;
+            _resolvingType = resolvingType;
+            _genericMethodsProvider = providersDto.GenericMethodsProvider;
+            _memberInfoProvider = providersDto.MemberInfoProvider;
+            _settersProvider = providersDto.SettersProvider;
+            _instancesProvider = providersDto.InstancesProvider;
+            _resolvingStopListProvider = providersDto.ResolvingStopListProvider;
             _baseResolveMethod = GetType().GetMethod(nameof(ResolveField), flags);
         }
 
         public void Resolve(object consumer, Type consumerType)
         {
+            if (_resolvingStopListProvider.IsResolvingStoped(_resolvingType, consumerType))
+            {
+                return;
+            }
+
             var injectedFields = _memberInfoProvider.GetFieldInfos(consumerType);
+            if (injectedFields.Length == 0)
+            {
+                _resolvingStopListProvider.StopResolving(_resolvingType, consumerType);
+                return;
+            }
+
             _tempResolveParams[0] = consumer;
             foreach (var injectedField in injectedFields)
             {
