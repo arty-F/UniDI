@@ -3,9 +3,9 @@
 namespace Assets.Core
 {
     [DefaultExecutionOrder(-1000)]
-    public class UniDIContext : MonoBehaviour
+    public class DIUnityContext : MonoBehaviour
     {
-        public static UniDIContext Instance;
+        public static DIUnityContext Instance;
 
         private ResolvingStrategy _resolvingStrategy;
         private InstancesProvider _instancesProvider;

@@ -6,12 +6,12 @@ namespace Assets.Core
     {
         public static void Resolve<T>(this T consumer) where T : class
         {
-            UniDIContext.Instance.Resolve(consumer);
+            DIUnityContext.Instance.Resolve(consumer);
         }
 
         public static void Inject<T>(this T injected)
         {
-            UniDIContext.Instance.Inject(injected);
+            DIUnityContext.Instance.Inject(injected);
         }
 
         public static Object InstantiateResolve(this Object original, Vector3 position, Quaternion rotation)
