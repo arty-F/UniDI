@@ -82,7 +82,7 @@ namespace Assets.Core
             }
 
             var result = _tempPropertiesInfo.ToArray();
-            _tempFieldsInfo.Clear();
+            _tempPropertiesInfo.Clear();
             return result;
         }
 
