@@ -1,0 +1,12 @@
+{
+  "name": "com.arty-f.monoinjector",
+  "displayName": "MonoInjector",
+  "version": "1.0.0",
+  "unity": "2021.3",
+  "description": "Fast and easy Unity DI library.",
+  "keywords": [ "DI", "Dependency Injection", "DI Container" ],
+  "license": "MIT",
+  "documentationUrl": "https://github.com/arty-F/MonoInjector",
+  "changelogUrl": "https://github.com/arty-F/MonoInjector/releases",
+  "licensesUrl": "https://github.com/arty-F/MonoInjector?tab=MIT-1-ov-file#readme"
+}
