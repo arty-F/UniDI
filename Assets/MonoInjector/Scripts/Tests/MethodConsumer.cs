@@ -1,11 +1,11 @@
-﻿namespace Assets
+﻿namespace MonoInjector.Test
 {
-    public class FieldsConsumer
+    public class MethodConsumer
     {
-        [Inject] private InjectedClass1 _field1;
-        [Inject] private InjectedClass2 _field2;
-        [Inject] private InjectedClass3 _field3;
-        [Inject] private InjectedClass4 _field4;
+        private InjectedClass1 _field1;
+        private InjectedClass2 _field2;
+        private InjectedClass3 _field3;
+        private InjectedClass4 _field4;
 
         public InjectedClass1 Property1 { get; private set; }
         public InjectedClass2 Property2 { get; private set; }
@@ -17,6 +17,7 @@
         private InjectedClass3 _injectedFromMethod3;
         private InjectedClass4 _injectedFromMethod4;
 
+        [Inject]
         public void Method(InjectedClass1 injected1, InjectedClass2 injected2, InjectedClass3 injected3, InjectedClass4 injected4)
         {
             _injectedFromMethod1 = injected1;

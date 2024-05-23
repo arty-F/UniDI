@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.Core.Utils
+namespace MonoInjector
 {
     public class UniDIException : Exception
     {

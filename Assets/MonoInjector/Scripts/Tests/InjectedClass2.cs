@@ -1,4 +1,4 @@
-﻿namespace Assets
+﻿namespace MonoInjector.Test
 {
     public class InjectedClass2
     {

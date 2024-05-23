@@ -1,14 +1,13 @@
-﻿using Assets.Core.Providers;
-using Assets.Core.Utils;
+﻿using MonoInjector.Providers;
+using MonoInjector.Utils;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Assets.Core.Resolvers
+namespace MonoInjector.Resolvers
 {
     internal class MethodResolver
     {
-        private ResolvingType _resolvingType;
         private readonly GenericMethodsProvider _genericMethodsProvider;
         private readonly MemberInfoProvider _memberInfoProvider;
         private readonly InstancesProvider _instancesProvider;
@@ -16,9 +15,8 @@ namespace Assets.Core.Resolvers
         private readonly MethodInfo _baseGetParameterMethod;
         private readonly Dictionary<MethodInfo, object[]> _methodParametersMap = new();
 
-        public MethodResolver(ResolvingType resolvingType, ProvidersDto providersDto, BindingFlags flags)
+        public MethodResolver(ProvidersDto providersDto, BindingFlags flags)
         {
-            _resolvingType = resolvingType;
             _genericMethodsProvider = providersDto.GenericMethodsProvider;
             _memberInfoProvider = providersDto.MemberInfoProvider;
             _instancesProvider = providersDto.InstancesProvider;

@@ -1,10 +1,9 @@
-﻿using Assets.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
-namespace Assets
+namespace MonoInjector.Test
 {
     public class Usage : MonoBehaviour
     {

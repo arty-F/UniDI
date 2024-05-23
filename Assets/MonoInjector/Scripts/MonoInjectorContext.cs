@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using MonoInjector.Providers;
+using MonoInjector.Strategies;
+using UnityEngine;
 
-namespace Assets.Core
+namespace MonoInjector
 {
     [DefaultExecutionOrder(-1000)]
-    public class DIUnityContext : MonoBehaviour
+    public class MonoInjectorContext : MonoBehaviour
     {
-        public static DIUnityContext Instance;
+        public static MonoInjectorContext Instance;
 
         private ResolvingStrategy _resolvingStrategy;
         private InstancesProvider _instancesProvider;

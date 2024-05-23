@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Assets.Core
+namespace MonoInjector.Providers
 {
     internal class MemberInfoProvider
     {

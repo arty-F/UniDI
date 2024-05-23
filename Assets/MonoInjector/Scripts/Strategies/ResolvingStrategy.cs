@@ -1,9 +1,9 @@
-﻿using Assets.Core.Providers;
-using Assets.Core.Resolvers;
-using Assets.Core.Utils;
+﻿using MonoInjector.Providers;
+using MonoInjector.Resolvers;
+using MonoInjector.Utils;
 using System.Reflection;
 
-namespace Assets.Core
+namespace MonoInjector.Strategies
 {
     internal class ResolvingStrategy
     {
@@ -27,9 +27,9 @@ namespace Assets.Core
             _parameterTypesProvider = new ParameterTypesProvider();
 
             var providersDto = new ProvidersDto(_genericMethodsProvider, _settersProvider, _memberInfoProvider, _instancesProvider, _parameterTypesProvider);
-            _fieldResolver = new FieldResolver(ResolvingType.Field, providersDto, FLAGS);
-            _propertyResolver = new PropertyResolver(ResolvingType.Property, providersDto, FLAGS);
-            _methodResolver = new MethodResolver(ResolvingType.Method, providersDto, FLAGS);
+            _fieldResolver = new FieldResolver(providersDto, FLAGS);
+            _propertyResolver = new PropertyResolver(providersDto, FLAGS);
+            _methodResolver = new MethodResolver(providersDto, FLAGS);
         }
 
         internal void Resolve(object consumer)

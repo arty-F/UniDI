@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Assets.Core
+namespace MonoInjector.Providers
 {
     internal class SettersProvider
     {

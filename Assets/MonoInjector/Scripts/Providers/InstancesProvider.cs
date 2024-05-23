@@ -1,9 +1,8 @@
-﻿using Assets.Core.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Core
+namespace MonoInjector.Providers
 {
     internal class InstancesProvider
     {

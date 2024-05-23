@@ -1,6 +1,6 @@
-﻿using Assets.Core.Providers;
+﻿using MonoInjector.Providers;
 
-namespace Assets.Core.Utils
+namespace MonoInjector.Utils
 {
     internal class ProvidersDto
     {

@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 
-namespace Assets.Core
+namespace MonoInjector
 {
     public static class Extensions
     {
         public static void Resolve<T>(this T consumer) where T : class
         {
-            DIUnityContext.Instance.Resolve(consumer);
+            MonoInjectorContext.Instance.Resolve(consumer);
         }
 
         public static void Inject<T>(this T injected)
         {
-            DIUnityContext.Instance.Inject(injected);
+            MonoInjectorContext.Instance.Inject(injected);
         }
 
         public static Object InstantiateResolve(this Object original, Vector3 position, Quaternion rotation)
