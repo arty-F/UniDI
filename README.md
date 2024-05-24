@@ -30,7 +30,7 @@ Download the latest `.unitypackage` file from [releases](https://github.com/arty
 
 ## Usage
 
-1. Add `MonoInjectorContext` component to any `GameObject` on scene (the injected dependencies lifecycle will be associated with this object).
+1. Add `MonoInjectorContext.cs` component to any `GameObject` on scene (the injected dependencies lifecycle will be associated with this object).
 
 2. Mark field/property/method into which the dependency should be injected with the `[Inject]` attribute.
 ```csharp
