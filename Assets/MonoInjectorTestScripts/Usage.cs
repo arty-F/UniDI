@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Assets.MonoInjectorTestScripts;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
@@ -17,7 +19,14 @@ namespace MonoInjector.Test
         private bool _methodConsumer;
         [SerializeField]
         private bool _allConsumer;
+        [SerializeField]
+        private PerformanceTester _tester;
 
+        private List<FieldsConsumer> _fieldsConsumers;
+        private List<PropertiesConsumer> _properiesConsumers;
+        private List<MethodConsumer> _methodConsumers;
+        private List<AllConsumer> _allConsumers;
+        private Stopwatch _stopwatch;
 
         private void Start()
         {
@@ -30,49 +39,27 @@ namespace MonoInjector.Test
             injected3.Inject();
             injected4.Inject();
 
-            var _fieldsConsumers = _fieldsConsumer
+            _fieldsConsumers = _fieldsConsumer
                 ? Enumerable.Repeat(new FieldsConsumer(), _instancesCount).ToList()
                 : new List<FieldsConsumer>();
-            var _properiesConsumers = _propertiesConsumer
+            _properiesConsumers = _propertiesConsumer
                 ? Enumerable.Repeat(new PropertiesConsumer(), _instancesCount).ToList()
                 : new List<PropertiesConsumer>();
-            var _methodConsumers = _methodConsumer
+            _methodConsumers = _methodConsumer
                 ? Enumerable.Repeat(new MethodConsumer(), _instancesCount).ToList()
                 : new List<MethodConsumer>();
-            var _allConsumers = _allConsumer
+            _allConsumers = _allConsumer
                 ? Enumerable.Repeat(new AllConsumer(), _instancesCount).ToList()
                 : new List<AllConsumer>();
+            _stopwatch = new Stopwatch();
 
-            Stopwatch timer = new Stopwatch();
-            int accumulator = 0;
-            timer.Start();
+            StartCoroutine(WaitFrameAndDoTest());
+        }
 
-            foreach (var item in _fieldsConsumers)
-            {
-                item.Resolve();
-                accumulator += item.GetSumField();
-            }
-
-            foreach (var item in _properiesConsumers)
-            {
-                item.Resolve();
-                accumulator += item.GetSumProp();
-            }
-
-            foreach (var item in _methodConsumers)
-            {
-                item.Resolve();
-                accumulator += item.GetSumMethod();
-            }
-
-            foreach (var item in _allConsumers)
-            {
-                item.Resolve();
-                accumulator += item.GetSumAll();
-            }
-
-            timer.Stop();
-            UnityEngine.Debug.Log($"{accumulator} accumulated in: {timer.ElapsedMilliseconds} ms." );
+        private IEnumerator WaitFrameAndDoTest()
+        {
+            yield return null;
+            _tester.Test(_fieldsConsumers, _properiesConsumers, _methodConsumers, _allConsumers, _stopwatch);
         }
     }
 }
