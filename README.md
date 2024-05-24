@@ -24,7 +24,7 @@ Requires a version of unity that supports path query parameter for git packages 
 
 ### Install from .unitypackage
 
-Download the latest .unitypackage file from [releases](https://github.com/arty-F/MonoInjector/releases) page and import downloaded package into unity.
+Download the latest `.unitypackage` file from [releases](https://github.com/arty-F/MonoInjector/releases) page and import downloaded package into unity.
 
 ![Screenshot_2](https://github.com/arty-F/MonoInjector/assets/49113047/4bb02ea9-bd94-4ab4-8d73-54a64661e2d8)
 
