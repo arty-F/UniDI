@@ -76,8 +76,8 @@ Or you can use `GameObject` extension method to one row instantiate and resolvin
 
 private void Start()
 {
-  var object1 = _prefab.InstantiateResolve();
-  var object2 = _prefab.InstantiateResolve(position, rotation);
+  var instance1 = _prefab.InstantiateResolve();
+  var instance2 = _prefab.InstantiateResolve<MyComponentType>(position, rotation);
 }
 ```
 
