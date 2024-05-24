@@ -6,7 +6,7 @@ Fast and easy to use dependency injection library for Unity game engine.
 - **Caching** reflection data for reducing allocations.
 - **Small codebase**.
 - **Easy to use**.
-- **DOES NOT CONTAIN UNNECESSARY FUNCTIONALITY** like other popular di frameworks.
+- **DOES NOT CONTAIN UNNECESSARY FUNCTIONALITY** like other popular DI frameworks.
 
 ## Features
 
