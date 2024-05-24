@@ -70,7 +70,7 @@ consumer1.Resolve();
 var consumer2 = Instantiate(prefab);
 consumer2.Resolve();
 ```
-Or you can use `GameObject` extension method to one row instantiating and resolving dependencies (has 9 overloads like original Instantiate method).
+Or you can use `GameObject` extension method to one row instantiate and resolving dependencies (has 9 overloads like original Instantiate method).
 ```csharp
 [SerializeField] GameObject _prefab;
 
