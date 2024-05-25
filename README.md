@@ -24,13 +24,13 @@ Requires a version of unity that supports path query parameter for git packages 
 
 ### Install from .unitypackage
 
-Download the latest .unitypackage file from [releases](https://github.com/arty-F/MonoInjector/releases) page and import downloaded package into unity.
+Download the latest `.unitypackage` file from [releases](https://github.com/arty-F/MonoInjector/releases) page and import downloaded package into unity.
 
 ![Screenshot_2](https://github.com/arty-F/MonoInjector/assets/49113047/4bb02ea9-bd94-4ab4-8d73-54a64661e2d8)
 
 ## Usage
 
-1. Add `MonoInjectorContext` component to any `GameObject` on scene (the injected dependencies lifecycle will be associated with this object).
+1. Add `MonoInjectorContext.cs` component to any `GameObject` on scene (the injected dependencies lifecycle will be associated with this object).
 
 2. Mark field/property/method into which the dependency should be injected with the `[Inject]` attribute.
 ```csharp
@@ -70,14 +70,14 @@ consumer1.Resolve();
 var consumer2 = Instantiate(prefab);
 consumer2.Resolve();
 ```
-Or you can use `GameObject` extension method to one row instantiating and resolving dependencies (has 9 overloads like original Instantiate method).
+Or you can use `GameObject` extension method to one row instantiate and resolving dependencies (has 9 overloads like original Instantiate method).
 ```csharp
 [SerializeField] GameObject _prefab;
 
 private void Start()
 {
-  var object1 = _prefab.InstantiateResolve();
-  var object2 = _prefab.InstantiateResolve(position, rotation);
+  var instance1 = _prefab.InstantiateResolve();
+  var instance2 = _prefab.InstantiateResolve<MyComponentType>(position, rotation);
 }
 ```
 
