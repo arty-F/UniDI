@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace MonoInjector.Test
 {
-    public class Usage : MonoBehaviour
+    public class PerformanceTestStarter : MonoBehaviour
     {
         [SerializeField]
         private int _instancesCount;
