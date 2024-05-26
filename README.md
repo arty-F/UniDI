@@ -61,11 +61,14 @@ using MonoInjector;
 var csharpClass = new InjectedClass();
 csharpClass.Inject();
 
-var gameObjectPrefab = Instantiate(_gameObjectPrefab);
-gameObjectPrefab.Inject<MyComponent>();
+var gameObjectInstance1 = Instantiate(_gameObjectPrefab);
+gameObjectInstance1.GetComponent<MyComponent>().Inject();
 
-var typedPrefab = Instantiate(_typedPrefab);
-typedPrefab.Inject(Lifetime.Scene);
+var gameObjectInstance2 = Instantiate(_gameObjectPrefab);
+gameObjectInstance2.Inject<MyComponent>();
+
+var typedInstance = Instantiate(_typedPrefab);
+typedInstance.Inject(Lifetime.Scene);
 ```
 
 3. Resolve dependencies of injection consumer classes by invoking `Resolve()` method. Or you can use `GameObject` extension method on prefab to one row instantiate and resolving dependencies (has 9 overloads like original Instantiate method).
