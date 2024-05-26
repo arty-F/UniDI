@@ -68,7 +68,7 @@ gameObjectInstance1.GetComponent<MyComponent>().Inject();
 
 //good way GameObject component injecting
 var gameObjectInstance2 = Instantiate(_gameObjectPrefab);
-gameObjectInstance2.Inject<MyComponent>();
+gameObjectInstance2.Inject<MyComponent>(Lifetime.Game);
 
 //best way GameObject component injecting
 var typedInstance = Instantiate(_typedPrefab);
@@ -91,7 +91,7 @@ GameObject gameObjectInstance1 = Instantiate(_gameObjectPrefab);
 gameObjectInstance1.GetComponent<MyComponent>().Resolve();
 
 //good way GameObject resolving
-GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<MyComponent>();
+GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<MyComponent>(parent);
 
 //best way GameObject resolving
 MyComponent typedInstance = _typedPrefab.InstantiateResolve(position, rotation);
