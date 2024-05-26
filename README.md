@@ -58,15 +58,19 @@ using MonoInjector;
 [SerializeField] GameObject _gameObjectPrefab;
 [SerializeField] MyComponent _typedPrefab;
 ...
+//plain C# class injecting
 var csharpClass = new InjectedClass();
 csharpClass.Inject();
 
+//bad way GameObject component injecting
 var gameObjectInstance1 = Instantiate(_gameObjectPrefab);
 gameObjectInstance1.GetComponent<MyComponent>().Inject();
 
+//good way GameObject component injecting
 var gameObjectInstance2 = Instantiate(_gameObjectPrefab);
 gameObjectInstance2.Inject<MyComponent>();
 
+//best way GameObject component injecting
 var typedInstance = Instantiate(_typedPrefab);
 typedInstance.Inject(Lifetime.Scene);
 ```
@@ -78,14 +82,18 @@ using MonoInjector;
 [SerializeField] GameObject _gameObjectPrefab;
 [SerializeField] MyComponent _typedPrefab;
 ...
-var consumerClass = new TestClass();
-consumerClass.Resolve();
+//plain C# class resolving
+var csharpClass = new TestClass();
+csharpClass.Resolve();
 
+//bad way GameObject resolving
 GameObject gameObjectInstance1 = Instantiate(_gameObjectPrefab);
 gameObjectInstance1.GetComponent<MyComponent>().Resolve();
 
+//good way GameObject resolving
 GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<MyComponent>();
 
+//best way GameObject resolving
 MyComponent typedInstance = _typedPrefab.InstantiateResolve(position, rotation);
 ```
 
