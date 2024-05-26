@@ -37,6 +37,7 @@ public class TestClass
 {
   [Inject] private InjectedClass1 _injectedField;
   [Inject] public InjectedClass2 InjectedProperty { get; private set; }
+
   [Inject]
   public void Method(InjectedClass3 p1, InjectedClass4 p2)
   {
