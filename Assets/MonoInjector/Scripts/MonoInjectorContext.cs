@@ -4,11 +4,11 @@ using UnityEngine.SceneManagement;
 
 namespace MonoInjector
 {
-    public sealed class MonoInjectorContext
+    internal sealed class MonoInjectorContext
     {
         private static MonoInjectorContext _instance = null;
 
-        public static MonoInjectorContext Instance
+        internal static MonoInjectorContext Instance
         {
             get
             {
@@ -30,12 +30,12 @@ namespace MonoInjector
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
         }
 
-        public void Resolve(object consumer)
+        internal void Resolve(object consumer)
         {
             _resolvingStrategy.Resolve(consumer);
         }
 
-        public void Inject<I>(I injected, Lifetime lifetime)
+        internal void Inject<I>(I injected, Lifetime lifetime)
         {
             _instancesProvider.Store(injected, lifetime);
         }
