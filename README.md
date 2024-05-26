@@ -91,7 +91,7 @@ GameObject gameObjectInstance1 = Instantiate(_gameObjectPrefab);
 gameObjectInstance1.GetComponent<MyComponent>().Resolve();
 
 //good way GameObject resolving
-GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<MyComponent>(parent);
+GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<MyComponent>();
 
 //best way GameObject resolving
 MyComponent typedInstance = _typedPrefab.InstantiateResolve(position, rotation);
