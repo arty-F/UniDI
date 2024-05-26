@@ -1,22 +1,33 @@
 ﻿using MonoInjector.Providers;
 using MonoInjector.Strategies;
-using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace MonoInjector
 {
-    [DefaultExecutionOrder(-1000)]
-    public class MonoInjectorContext : MonoBehaviour
+    public sealed class MonoInjectorContext
     {
-        public static MonoInjectorContext Instance;
+        private static MonoInjectorContext _instance = null;
+
+        public static MonoInjectorContext Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new MonoInjectorContext();
+                }
+                return _instance;
+            }
+        }
 
         private ResolvingStrategy _resolvingStrategy;
         private InstancesProvider _instancesProvider;
 
-        private void Awake()
+        private MonoInjectorContext() 
         {
-            Instance = this;
             _instancesProvider = new InstancesProvider();
             _resolvingStrategy = new ResolvingStrategy(_instancesProvider);
+            SceneManager.activeSceneChanged += OnActiveSceneChanged;
         }
 
         public void Resolve(object consumer)
@@ -24,9 +35,14 @@ namespace MonoInjector
             _resolvingStrategy.Resolve(consumer);
         }
 
-        public void Inject<I>(I injected)
+        public void Inject<I>(I injected, Lifetime lifetime)
         {
-            _instancesProvider.Store(injected);
+            _instancesProvider.Store(injected, lifetime);
+        }
+
+        private void OnActiveSceneChanged(Scene current, Scene next)
+        {
+            _instancesProvider.ClearSceneInstances();
         }
     }
 }

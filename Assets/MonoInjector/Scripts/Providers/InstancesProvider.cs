@@ -6,31 +6,55 @@ namespace MonoInjector.Providers
 {
     internal class InstancesProvider
     {
-        private readonly Dictionary<Type, object> _storedInstancesMap = new();
+        private readonly Dictionary<Type, object> _gameInstancesMap = new();
+        private readonly Dictionary<Type, object> _sceneInstancesMap = new();
 
-        internal void Store<I>(I injected)
+        internal void Store<I>(I injected, Lifetime lifetime)
         {
             var type = typeof(I);
-            if (_storedInstancesMap.ContainsKey(type))
+            if (lifetime == Lifetime.Game)
             {
-#if UNITY_EDITOR
-                Debug.Log($"Type {type.Name} are reinjected.");
-#endif
-                _storedInstancesMap[type] = injected;
+                StoreInstance(injected, _gameInstancesMap, type);
             }
             else
             {
-                _storedInstancesMap.Add(typeof(I), injected);
+                StoreInstance(injected, _sceneInstancesMap, type);
             }
         }
 
         internal I GetInstance<I>(Type type)
         {
-            if (!_storedInstancesMap.ContainsKey(type))
+            if (_gameInstancesMap.ContainsKey(type))
             {
-                throw new MonoInjectorException($"Type of {type.Name} has not yet been injected.");
+                return (I)_gameInstancesMap[type];
             }
-            return (I)_storedInstancesMap[type];
+
+            if (_sceneInstancesMap.ContainsKey(type))
+            {
+                return (I)_sceneInstancesMap[type];
+            }
+
+            throw new MonoInjectorException($"Type of {type.Name} has not yet been injected.");
+        }
+
+        internal void ClearSceneInstances()
+        {
+            _sceneInstancesMap.Clear();
+        }
+
+        private void StoreInstance<I>(I injected, Dictionary<Type, object> instancesMap, Type type)
+        {
+            if (instancesMap.ContainsKey(type))
+            {
+#if UNITY_EDITOR
+                Debug.Log($"Type {type.Name} are reinjected.");
+#endif
+                instancesMap[type] = injected;
+            }
+            else
+            {
+                instancesMap.Add(typeof(I), injected);
+            }
         }
     }
 }

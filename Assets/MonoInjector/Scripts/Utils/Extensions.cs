@@ -9,9 +9,9 @@ namespace MonoInjector
             MonoInjectorContext.Instance.Resolve(consumer);
         }
 
-        public static void Inject<T>(this T injected)
+        public static void Inject<T>(this T injected, Lifetime lifetime = Lifetime.Game)
         {
-            MonoInjectorContext.Instance.Inject(injected);
+            MonoInjectorContext.Instance.Inject(injected, lifetime);
         }
 
         public static void Inject<C>(this GameObject injected)
