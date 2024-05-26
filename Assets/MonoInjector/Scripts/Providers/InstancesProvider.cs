@@ -28,7 +28,7 @@ namespace MonoInjector.Providers
         {
             if (!_storedInstancesMap.ContainsKey(type))
             {
-                throw new UniDIException($"Type of {type.Name} has not yet been injected.");
+                throw new MonoInjectorException($"Type of {type.Name} has not yet been injected.");
             }
             return (I)_storedInstancesMap[type];
         }

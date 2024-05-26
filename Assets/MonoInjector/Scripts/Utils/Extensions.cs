@@ -14,38 +14,47 @@ namespace MonoInjector
             MonoInjectorContext.Instance.Inject(injected);
         }
 
-        public static Object InstantiateResolve(this Object original, Vector3 position, Quaternion rotation)
+        public static void Inject<C>(this GameObject injected)
+        {
+            if (!injected.TryGetComponent<C>(out var component))
+            {
+                throw new MonoInjectorException($"GameObject {injected.name} does not contain component of type {typeof(C).Name} to injection.");
+            }
+            component.Inject();
+        }
+
+        public static GameObject InstantiateResolve<C>(this GameObject original, Vector3 position, Quaternion rotation) where C : class
         {
             var result = Object.Instantiate(original, position, rotation);
-            result.Resolve();
+            ResolveComponent<C>(result);
             return result;
         }
 
-        public static Object InstantiateResolve(this Object original, Vector3 position, Quaternion rotation, Transform parent)
+        public static GameObject InstantiateResolve<C>(this GameObject original, Vector3 position, Quaternion rotation, Transform parent) where C : class
         {
             var result = Object.Instantiate(original, position, rotation, parent);
-            result.Resolve();
+            ResolveComponent<C>(result);
             return result;
         }
 
-        public static Object InstantiateResolve(this Object original)
+        public static GameObject InstantiateResolve<C>(this GameObject original) where C : class
         {
             var result = Object.Instantiate(original);
-            result.Resolve();
+            ResolveComponent<C>(result);
             return result;
         }
 
-        public static Object InstantiateResolve(this Object original, Transform parent)
+        public static GameObject InstantiateResolve<C>(this GameObject original, Transform parent) where C : class
         {
             var result = Object.Instantiate(original, parent);
-            result.Resolve();
+            ResolveComponent<C>(result);
             return result;
         }
 
-        public static Object InstantiateResolve(this Object original, Transform parent, bool instantiateInWorldSpace)
+        public static GameObject InstantiateResolve<C>(this GameObject original, Transform parent, bool instantiateInWorldSpace) where C : class
         {
             var result = Object.Instantiate(original, parent, instantiateInWorldSpace);
-            result.Resolve();
+            ResolveComponent<C>(result);
             return result;
         }
 
@@ -82,6 +91,15 @@ namespace MonoInjector
             var result = Object.Instantiate(original, parent, worldPositionStays);
             result.Resolve();
             return result;
+        }
+
+        private static void ResolveComponent<C>(GameObject obj) where C : class
+        {
+            if (!obj.TryGetComponent<C>(out var component))
+            {
+                throw new MonoInjectorException($"GameObject {obj.name} does not contain component of type {typeof(C).Name} to resolving.");
+            }
+            component.Resolve();
         }
     }
 }

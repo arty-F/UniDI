@@ -12,11 +12,13 @@ namespace MonoInjector.Test
         private void Start()
         {
             var injected = Instantiate(_injected);
-            injected.Inject();
+            injected.Inject<MonoInjected>();
 
-            var consumer = _consumer.InstantiateResolve();
-            var c = consumer.GetComponent<MonoConsumer>();
-            Debug.Log(c.GetSum());
+            //var consumer = _consumer.InstantiateResolve();
+
+            var consumer = _consumer.InstantiateResolve<MonoConsumer>();
+
+            Debug.Log(consumer.GetComponent<MonoConsumer>().GetSum());
         }
     }
 }
