@@ -30,18 +30,13 @@ Download the latest `.unitypackage` file from [releases](https://github.com/arty
 
 ## Usage
 
-1. Add `MonoInjectorContext.cs` component to any `GameObject` on scene (the injected dependencies lifecycle will be associated with this object).
-
-2. Mark field/property/method into which the dependency should be injected with the `[Inject]` attribute.
+1. Mark field/property/method into which the dependency should be injected with the `[Inject]` attribute.
 ```csharp
 using MonoInjector;
-
 public class TestClass
 {
   [Inject] private InjectedClass1 _injectedField;
-
   [Inject] public InjectedClass2 InjectedProperty { get; private set; }
-
   [Inject]
   public void Method(InjectedClass3 p1, InjectedClass4 p2)
   {
@@ -53,32 +48,41 @@ public class TestClass
 }
 ```
 
-3. Inject instances by invoking `Inject()` method (this is a part of library extension method).
+2. Inject instances by invoking `Inject()` method. You can use generic version of `Inject<>()` method on `GameObject` where the generic type parameter will represent the type of `GameObject` component that needs to be injected. You can also specify the lifetime of the injection:
+- `Lifetime.Game` (default) : the dependency will exist as long as the application is running.
+- `Lifetime.Scene` : dependencies will be cleared every time the active scene changes.
 ```csharp
-var instance1 = new InjectedClass1();
-instance1.Inject();
+using MonoInjector;
+...
+[SerializeField] GameObject _gameObjectPrefab;
+[SerializeField] MyComponent _typedPrefab;
+...
+var csharpClass = new InjectedClass();
+csharpClass.Inject();
 
-var instance2 = Instantiate(prefab);
-instance2.Inject();
+var gameObjectPrefab = Instantiate(_gameObjectPrefab);
+gameObjectPrefab.Inject<MyComponent>();
+
+var typedPrefab = Instantiate(_typedPrefab);
+typedPrefab.Inject(Lifetime.Scene);
 ```
 
-4. Resolve dependencies of injection consumer classes by invoking `Resolve()` method.
+3. Resolve dependencies of injection consumer classes by invoking `Resolve()` method. Or you can use `GameObject` extension method on prefab to one row instantiate and resolving dependencies (has 9 overloads like original Instantiate method).
 ```csharp
-var consumer1 = new TestClass();
-consumer1.Resolve();
+using MonoInjector;
+...
+[SerializeField] GameObject _gameObjectPrefab;
+[SerializeField] MyComponent _typedPrefab;
+...
+var consumerClass = new TestClass();
+consumerClass.Resolve();
 
-var consumer2 = Instantiate(prefab);
-consumer2.Resolve();
-```
-Or you can use `GameObject` extension method to one row instantiate and resolving dependencies (has 9 overloads like original Instantiate method).
-```csharp
-[SerializeField] GameObject _prefab;
+GameObject gameObjectInstance1 = Instantiate(_gameObjectPrefab);
+gameObjectInstance1.GetComponent<MyComponent>().Resolve();
 
-private void Start()
-{
-  var instance1 = _prefab.InstantiateResolve();
-  var instance2 = _prefab.InstantiateResolve<MyComponentType>(position, rotation);
-}
+GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<MyComponent>();
+
+MyComponent typedInstance = _typedPrefab.InstantiateResolve(position, rotation);
 ```
 
 ## Performance
