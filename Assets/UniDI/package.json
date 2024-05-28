@@ -1,0 +1,13 @@
+{
+  "name": "com.arty-f.unidi",
+  "displayName": "UniDI",
+  "author": { "name": "arty-F" },
+  "version": "1.0.0",
+  "unity": "2021.3",
+  "description": "Fast and easy Unity DI library.",
+  "keywords": [ "DI", "Dependency Injection", "DI Container" ],
+  "license": "MIT",
+  "documentationUrl": "https://github.com/arty-F/UniDI",
+  "changelogUrl": "https://github.com/arty-F/UniDI/releases",
+  "licensesUrl": "https://github.com/arty-F/UniDI?tab=MIT-1-ov-file#readme"
+}
