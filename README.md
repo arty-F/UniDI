@@ -57,7 +57,7 @@ public class TestClass
 using UniDI;
 ...
 [SerializeField] GameObject _gameObjectPrefab;
-[SerializeField] MyComponent _typedPrefab;
+[SerializeField] InjectedComponent _typedPrefab;
 ...
 //plain C# class injecting
 var csharpClass = new InjectedClass();
@@ -65,14 +65,14 @@ csharpClass.Inject();
 
 //bad way GameObject component injecting
 var gameObjectInstance1 = Instantiate(_gameObjectPrefab);
-gameObjectInstance1.GetComponent<MyComponent>().Inject();
+gameObjectInstance1.GetComponent<InjectedComponent>().Inject();
 
 //good way GameObject component injecting
 var gameObjectInstance2 = Instantiate(_gameObjectPrefab);
-gameObjectInstance2.Inject<MyComponent>(Lifetime.Game);
+gameObjectInstance2.Inject<InjectedComponent>(Lifetime.Game);
 
 //best way GameObject component injecting
-var typedInstance = Instantiate(_typedPrefab);
+InjectedComponent typedInstance = Instantiate(_typedPrefab);
 typedInstance.Inject(Lifetime.Scene);
 ```
 
@@ -81,7 +81,7 @@ typedInstance.Inject(Lifetime.Scene);
 using UniDI;
 ...
 [SerializeField] GameObject _gameObjectPrefab;
-[SerializeField] MyComponent _typedPrefab;
+[SerializeField] ConsumerComponent _typedPrefab;
 ...
 //plain C# class resolving
 var csharpClass = new TestClass();
@@ -89,13 +89,13 @@ csharpClass.Resolve();
 
 //bad way GameObject resolving
 GameObject gameObjectInstance1 = Instantiate(_gameObjectPrefab);
-gameObjectInstance1.GetComponent<MyComponent>().Resolve();
+gameObjectInstance1.GetComponent<ConsumerComponent>().Resolve();
 
 //good way GameObject resolving
-GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<MyComponent>();
+GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<ConsumerComponent>();
 
 //best way GameObject resolving
-MyComponent typedInstance = _typedPrefab.InstantiateResolve(position, rotation);
+ConsumerComponent typedInstance = _typedPrefab.InstantiateResolve(position, rotation);
 ```
 
 ## Performance
