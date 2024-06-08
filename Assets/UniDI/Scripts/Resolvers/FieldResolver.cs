@@ -12,10 +12,9 @@ namespace UniDI.Resolvers
         private readonly SettersProvider _settersProvider;
         private readonly InstancesProvider _instancesProvider;
         private readonly MethodInfo _baseResolveMethod;
+        private readonly object[] _tempResolveParams3 = new object[3];
 
-        private readonly object[] _tempResolveParams = new object[2];
-
-        public FieldResolver(ProvidersDto providersDto, BindingFlags flags)
+        internal FieldResolver(ProvidersDto providersDto, BindingFlags flags)
         {
             _genericMethodsProvider = providersDto.GenericMethodsProvider;
             _memberInfoProvider = providersDto.MemberInfoProvider;
@@ -24,7 +23,7 @@ namespace UniDI.Resolvers
             _baseResolveMethod = GetType().GetMethod(nameof(ResolveField), flags);
         }
 
-        public void Resolve(object consumer, Type consumerType)
+        internal void Resolve(object consumer, Type consumerType, int? id = null)
         {
             var injectedFields = _memberInfoProvider.GetFieldInfos(consumerType);
             if (injectedFields.Length == 0)
@@ -32,19 +31,28 @@ namespace UniDI.Resolvers
                 return;
             }
 
-            _tempResolveParams[0] = consumer;
+            _tempResolveParams3[0] = consumer;
+            _tempResolveParams3[1] = id;
             foreach (var injectedField in injectedFields)
             {
-                var resolveFieldMethod = _genericMethodsProvider.GetResolveFieldMethod(_baseResolveMethod, consumerType, injectedField);
-                _tempResolveParams[1] = injectedField;
-                resolveFieldMethod.Invoke(this, _tempResolveParams);
+                var resolveFieldMethod = _genericMethodsProvider.GetResolveFieldMethod(_baseResolveMethod, consumerType, injectedField, typeof(int));
+                _tempResolveParams3[2] = injectedField;
+                resolveFieldMethod.Invoke(this, _tempResolveParams3);
             }
         }
 
-        private void ResolveField<C, I>(C consumer, FieldInfo fieldInfo)
+        private void ResolveField<C, I>(C consumer, int? id, FieldInfo fieldInfo)
         {
             var setter = _settersProvider.GetFieldSetter<C, I>(fieldInfo);
-            setter(consumer, _instancesProvider.GetInstance<I>(typeof(I)));
+            if (id == null)
+            {
+                setter(consumer, _instancesProvider.GetInstance<I>(typeof(I)));
+            }
+            else
+            {
+                setter(consumer, _instancesProvider.GetInstance<I>(typeof(I), id.Value));
+            }
+            
         }
     }
 }
