@@ -32,27 +32,22 @@ namespace UniDI.Resolvers
             }
 
             _tempResolveParams3[0] = consumer;
-            _tempResolveParams3[1] = id;
+            _tempResolveParams3[2] = id;
             foreach (var injectedField in injectedFields)
             {
-                var resolveFieldMethod = _genericMethodsProvider.GetResolveFieldMethod(_baseResolveMethod, consumerType, injectedField, typeof(int));
-                _tempResolveParams3[2] = injectedField;
+                var resolveFieldMethod = _genericMethodsProvider.GetResolveFieldMethod(_baseResolveMethod, consumerType, injectedField);
+                _tempResolveParams3[1] = injectedField;
                 resolveFieldMethod.Invoke(this, _tempResolveParams3);
             }
         }
 
-        private void ResolveField<C, I>(C consumer, int? id, FieldInfo fieldInfo)
+        private void ResolveField<C, I>(C consumer, FieldInfo fieldInfo, int? id)
         {
             var setter = _settersProvider.GetFieldSetter<C, I>(fieldInfo);
-            if (id == null)
-            {
-                setter(consumer, _instancesProvider.GetInstance<I>(typeof(I)));
-            }
-            else
-            {
-                setter(consumer, _instancesProvider.GetInstance<I>(typeof(I), id.Value));
-            }
-            
+            var instance = id == null 
+                ? _instancesProvider.GetInstance<I>(typeof(I)) 
+                : _instancesProvider.GetInstance<I>(typeof(I), id.Value);
+            setter(consumer, instance);
         }
     }
 }

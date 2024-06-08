@@ -12,9 +12,8 @@ namespace UniDI.Resolvers
         private readonly SettersProvider _settersProvider;
         private readonly InstancesProvider _instancesProvider;
         private readonly MethodInfo _baseResolveMethod;
+        private readonly object[] _tempResolveParams = new object[3];
 
-        private readonly object[] _tempResolveParams = new object[2];
-        
         public PropertyResolver(ProvidersDto providersDto, BindingFlags flags)
         {
             _genericMethodsProvider = providersDto.GenericMethodsProvider;
@@ -24,7 +23,7 @@ namespace UniDI.Resolvers
             _baseResolveMethod = GetType().GetMethod(nameof(ResolveProperty), flags);
         }
 
-        public void Resolve(object consumer, Type consumerType)
+        public void Resolve(object consumer, Type consumerType, int? id = null)
         {
             var injectedProperties = _memberInfoProvider.GetPropertyInfos(consumerType);
             if (injectedProperties.Length == 0)
@@ -33,6 +32,7 @@ namespace UniDI.Resolvers
             }
 
             _tempResolveParams[0] = consumer;
+            _tempResolveParams[2] = id;
             foreach (var injectedProperty in injectedProperties)
             {
                 var resolvePropertyMethod = _genericMethodsProvider.GetResolvePropertyMethod(_baseResolveMethod, consumerType, injectedProperty);
@@ -41,10 +41,13 @@ namespace UniDI.Resolvers
             }
         }
 
-        private void ResolveProperty<C, I>(C consumer, PropertyInfo prpertyInfo)
+        private void ResolveProperty<C, I>(C consumer, PropertyInfo prpertyInfo, int? id)
         {
             var setter = _settersProvider.GetPropertySetter<C, I>(prpertyInfo);
-            setter(consumer, _instancesProvider.GetInstance<I>(typeof(I)));
+            var instance = id == null
+                ? _instancesProvider.GetInstance<I>(typeof(I))
+                : _instancesProvider.GetInstance<I>(typeof(I), id.Value);
+            setter(consumer, instance);
         }
     }
 }
