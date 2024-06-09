@@ -1,4 +1,4 @@
-# MonoInjector
+# UniDI
 
 Fast and easy to use dependency injection library for Unity game engine.
 
@@ -13,18 +13,19 @@ Fast and easy to use dependency injection library for Unity game engine.
 - **Field** injection.
 - **Property** injection.
 - **Method** injection.
+- Injection lifetime.
 
 ## Installation
 
 ### Install from git URL
 
-Requires a version of unity that supports path query parameter for git packages (Unity 2021.3 or later). You can add a reference `https://github.com/arty-F/MonoInjector.git?path=Assets/MonoInjector` to Package Manager.
+Requires a version of unity that supports path query parameter for git packages (Unity 2021.3 or later). You can add a reference `https://github.com/arty-F/UniDI.git?path=Assets/UniDI` to Package Manager.
 
 ![Screenshot_1](https://github.com/arty-F/MonoInjector/assets/49113047/0a65d9e3-89f2-44ed-8232-713660590d6f)
 
 ### Install from .unitypackage
 
-Download the latest `.unitypackage` file from [releases](https://github.com/arty-F/MonoInjector/releases) page and import downloaded package into unity.
+Download the latest `.unitypackage` file from [releases](https://github.com/arty-F/UniDI/releases) page and import downloaded package into unity.
 
 ![Screenshot_2](https://github.com/arty-F/MonoInjector/assets/49113047/4bb02ea9-bd94-4ab4-8d73-54a64661e2d8)
 
@@ -32,7 +33,7 @@ Download the latest `.unitypackage` file from [releases](https://github.com/arty
 
 1. Mark field/property/method into which the dependency should be injected with the `[Inject]` attribute.
 ```csharp
-using MonoInjector;
+using UniDI;
 public class TestClass
 {
   [Inject] private InjectedClass1 _injectedField;
@@ -53,10 +54,10 @@ public class TestClass
 - `Lifetime.Game` (default) : the dependency will exist as long as the application is running.
 - `Lifetime.Scene` : dependencies will be cleared every time the active scene changes.
 ```csharp
-using MonoInjector;
+using UniDI;
 ...
 [SerializeField] GameObject _gameObjectPrefab;
-[SerializeField] MyComponent _typedPrefab;
+[SerializeField] InjectedComponent _typedPrefab;
 ...
 //plain C# class injecting
 var csharpClass = new InjectedClass();
@@ -64,23 +65,23 @@ csharpClass.Inject();
 
 //bad way GameObject component injecting
 var gameObjectInstance1 = Instantiate(_gameObjectPrefab);
-gameObjectInstance1.GetComponent<MyComponent>().Inject();
+gameObjectInstance1.GetComponent<InjectedComponent>().Inject();
 
 //good way GameObject component injecting
 var gameObjectInstance2 = Instantiate(_gameObjectPrefab);
-gameObjectInstance2.Inject<MyComponent>(Lifetime.Game);
+gameObjectInstance2.Inject<InjectedComponent>(Lifetime.Game);
 
 //best way GameObject component injecting
-var typedInstance = Instantiate(_typedPrefab);
+InjectedComponent typedInstance = Instantiate(_typedPrefab);
 typedInstance.Inject(Lifetime.Scene);
 ```
 
 3. Resolve dependencies of injection consumer classes by invoking `Resolve()` method. Or you can use `GameObject` extension method on prefab to one row instantiate and resolving dependencies (has 9 overloads like original Instantiate method).
 ```csharp
-using MonoInjector;
+using UniDI;
 ...
 [SerializeField] GameObject _gameObjectPrefab;
-[SerializeField] MyComponent _typedPrefab;
+[SerializeField] ConsumerComponent _typedPrefab;
 ...
 //plain C# class resolving
 var csharpClass = new TestClass();
@@ -88,13 +89,13 @@ csharpClass.Resolve();
 
 //bad way GameObject resolving
 GameObject gameObjectInstance1 = Instantiate(_gameObjectPrefab);
-gameObjectInstance1.GetComponent<MyComponent>().Resolve();
+gameObjectInstance1.GetComponent<ConsumerComponent>().Resolve();
 
 //good way GameObject resolving
-GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<MyComponent>();
+GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<ConsumerComponent>();
 
 //best way GameObject resolving
-MyComponent typedInstance = _typedPrefab.InstantiateResolve(position, rotation);
+ConsumerComponent typedInstance = _typedPrefab.InstantiateResolve(position, rotation);
 ```
 
 ## Performance
