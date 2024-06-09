@@ -14,6 +14,7 @@ Fast and easy to use dependency injection library for Unity game engine.
 - **Property** injection.
 - **Method** injection.
 - Injection lifetime.
+- Local scope injection.
 
 ## Installation
 
@@ -50,9 +51,7 @@ public class TestClass
 }
 ```
 
-2. Inject instances by invoking `Inject()` method. You can use generic version of `Inject<>()` method on `GameObject` where the generic type parameter will represent the type of `GameObject` component that needs to be injected. You can also specify the lifetime of the injection:
-- `Lifetime.Game` (default) : the dependency will exist as long as the application is running.
-- `Lifetime.Scene` : dependencies will be cleared every time the active scene changes.
+2. Inject instances by invoking `Inject()` method. You can use generic version of `Inject<>()` method on `GameObject` where the generic type parameter will represent the type of `GameObject` component that needs to be injected.
 ```csharp
 using UniDI;
 ...
@@ -69,11 +68,11 @@ gameObjectInstance1.GetComponent<InjectedComponent>().Inject();
 
 //good way GameObject component injecting
 var gameObjectInstance2 = Instantiate(_gameObjectPrefab);
-gameObjectInstance2.Inject<InjectedComponent>(Lifetime.Game);
+gameObjectInstance2.Inject<InjectedComponent>();
 
 //best way GameObject component injecting
 InjectedComponent typedInstance = Instantiate(_typedPrefab);
-typedInstance.Inject(Lifetime.Scene);
+typedInstance.Inject();
 ```
 
 3. Resolve dependencies of injection consumer classes by invoking `Resolve()` method. Or you can use `GameObject` extension method on prefab to one row instantiate and resolving dependencies (has 9 overloads like original Instantiate method).
@@ -96,6 +95,50 @@ GameObject gameObjectInstance2 = _gameObjectPrefab.InstantiateResolve<ConsumerCo
 
 //best way GameObject resolving
 ConsumerComponent typedInstance = _typedPrefab.InstantiateResolve(position, rotation);
+```
+
+## Features
+
+### Injection lifetime
+
+You can specify the lifetime of the injection:
+- `Lifetime.Game` (default) : the dependency will exist as long as the application is running.
+- `Lifetime.Scene` : dependencies will be cleared every time the active scene changes.
+```csharp
+var injectedClass = new InjectedClass();
+injectedClass.Inject(Lifetime.Scene);
+```
+
+### Local scope injection
+
+By default, all injected classes will be placed in the global scope. In order to set the local scope for dependency injection, you must specify the scope identifier based on `int` when injecting and resolving dependencies. When using resolve for local scope if the dependency was not found in the specified local scope, then they will try to find it in the global scope. By this way you can inject both global and local dependencies into one consumer.
+```csharp
+public class Consumer : MonoBehaviour
+{
+  [Inject] private GlobalInjectionClass _field1;
+  [Inject] public LocalInjectionClass _field2;
+}
+...
+int id = consumer.GetInstanceID();
+
+var globalInjectionClass = new GlobalInjectionClass();
+globalInjectionClass.Inject();
+
+var localInjectionClass = new LocalInjectionClass();
+localInjectionClass.Inject(id);
+
+consumer.Resolve(id);
+```
+
+### Injection clearing
+
+You can override or clear previously injected dependencies. For overriding just use `Inject()` on new instance. For clearing use `ReleaseDependency()` on same type instance.
+- Global scope dependency clearing by `ReleaseDependency()`.
+- Local scope dependency clearing by `ReleaseDependency(id)` where `id` is a local scope `int` type identifier. By default this type of clear deletes the entire local scope. To avoid completely clearing the local scope you must pass a value of `clearFullScope` is `false`, like that `ReleaseDependency(id, false)`. By passing this `false` value you will clear only the type on which this method was called in the specified local scope.
+```csharp
+globalDependencyInstance.ReleaseDependency();            //clear the type of globalDependencyInstance in global scope
+localDependencyInstance1.ReleaseDependency(id);          //clear all dependencies in specified local scope
+localDependencyInstance2.ReleaseDependency(id, false);   //clear only the type of localDependencyInstance2 in specified local scope
 ```
 
 ## Performance
