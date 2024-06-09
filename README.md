@@ -136,9 +136,9 @@ You can override or clear previously injected dependencies. For overriding just 
 - Global scope dependency clearing by `ReleaseDependency()`.
 - Local scope dependency clearing by `ReleaseDependency(id)` where `id` is a local scope `int` type identifier. By default this type of clear deletes the entire local scope. To avoid completely clearing the local scope you must pass a value of `clearFullScope` is `false`, like that `ReleaseDependency(id, false)`. By passing this `false` value you will clear only the type on which this method was called in the specified local scope.
 ```csharp
-globalDependencyInstance.ReleaseDependency();            //clear the type of globalDependencyInstance in global scope
+globalDependencyInstance.ReleaseDependency();            //clear globalDependencyInstance in global scope
 localDependencyInstance1.ReleaseDependency(id);          //clear all dependencies in specified local scope
-localDependencyInstance2.ReleaseDependency(id, false);   //clear only the type of localDependencyInstance2 in specified local scope
+localDependencyInstance2.ReleaseDependency(id, false);   //clear localDependencyInstance2 in specified local scope
 ```
 
 ## Performance
