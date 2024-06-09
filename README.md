@@ -116,7 +116,7 @@ By default, all injected classes will be placed in the global scope. In order to
 public class Consumer : MonoBehaviour
 {
   [Inject] private GlobalInjectionClass _field1;
-  [Inject] public LocalInjectionClass _field2;
+  [Inject] private LocalInjectionClass _field2;
 }
 ...
 int id = consumer.GetInstanceID();
