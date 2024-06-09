@@ -10,7 +10,7 @@ namespace UniDI.Utils
         internal InstancesProvider InstancesProvider { get; private set; }
         internal ParameterTypesProvider ParameterTypesProvider { get; private set; }
 
-        public ProvidersDto(
+        internal ProvidersDto(
             GenericMethodsProvider genericMethodsProvider, 
             SettersProvider settersProvider, 
             MemberInfoProvider memberInfoProvider, 

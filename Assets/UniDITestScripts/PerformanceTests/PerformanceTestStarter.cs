@@ -34,10 +34,10 @@ namespace UniDI.Test
             var injected2 = new InjectedClass2();
             var injected3 = new InjectedClass3();
             var injected4 = new InjectedClass4();
-            injected1.Inject();
-            injected2.Inject();
-            injected3.Inject();
-            injected4.Inject();
+            injected1.Inject(1);
+            injected2.Inject(1);
+            injected3.Inject(1);
+            injected4.Inject(1);
 
             _fieldsConsumers = _fieldsConsumer
                 ? Enumerable.Repeat(new FieldsConsumer(), _instancesCount).ToList()

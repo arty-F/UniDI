@@ -16,7 +16,7 @@ namespace UniDI.Providers
         private readonly List<PropertyInfo> _tempPropertiesInfo;
         private readonly List<MethodInfo> _tempMethodsInfo;
 
-        public MemberInfoProvider(BindingFlags flags, int tempListSize = TEMP_LIST_SIZE)
+        internal MemberInfoProvider(BindingFlags flags, int tempListSize = TEMP_LIST_SIZE)
         {
             _flags = flags;
             _tempFieldsInfo = new(tempListSize);

@@ -10,7 +10,6 @@ namespace UniDI.Providers
         private readonly Dictionary<Type, object> _sceneInstancesMap = new();
         private readonly Dictionary<int, Dictionary<Type, object>> _gameIdInstancesMap = new();
         private readonly Dictionary<int, Dictionary<Type, object>> _sceneIdInstancesMap = new();
-        private readonly List<int> _sceneIds = new();
 
         internal void Store<I>(I injected, Lifetime lifetime)
         {
@@ -34,11 +33,6 @@ namespace UniDI.Providers
             {
                 StoreInstanceById(injected, id, _sceneIdInstancesMap);
             }
-
-            if (lifetime == Lifetime.Scene)
-            {
-                _sceneIds.Add(id);
-            }
         }
 
         internal I GetInstance<I>(Type type)
@@ -56,25 +50,56 @@ namespace UniDI.Providers
 
         internal I GetInstance<I>(Type type, int id)
         {
-            var idInstancesMap = GetIdInstancesMap(id)[id];
-            if (idInstancesMap.ContainsKey(type))
+            if (_gameIdInstancesMap.ContainsKey(id) && _gameIdInstancesMap[id].ContainsKey(type))
             {
-                return (I)idInstancesMap[type];
+                return (I)_gameIdInstancesMap[id][type];
             }
-            throw new UniDIException($"Type of {type.Name} has not yet been injected by {id} id.");
+            if (_sceneIdInstancesMap.ContainsKey(id) && _sceneIdInstancesMap[id].ContainsKey(type))
+            {
+                return (I)_sceneIdInstancesMap[id][type];
+            }
+            return GetInstance<I>(type);
         }
 
         internal void ClearSceneInstances()
         {
             _sceneInstancesMap.Clear();
             _sceneIdInstancesMap.Clear();
-            _sceneIds.Clear();
         }
 
-        internal void ClearInstanceById(int id)
+        internal void ClearInstances(Type type)
         {
-            var idInstancesMap = GetIdInstancesMap(id)[id];
-            idInstancesMap.Clear();
+            ClearInstance(_gameInstancesMap, type);
+            ClearInstance(_sceneInstancesMap, type);
+        }
+
+        private void ClearInstance(Dictionary<Type, object> map, Type type)
+        {
+            if (map.ContainsKey(type))
+            {
+                map.Remove(type);
+            }
+        }
+
+        internal void ClearInstancesById(Type type, int id, bool clearFullScope)
+        {
+            ClearInstanceById(_gameIdInstancesMap, type, id, clearFullScope);
+            ClearInstanceById(_sceneIdInstancesMap, type, id, clearFullScope);
+        }
+
+        private void ClearInstanceById(Dictionary<int, Dictionary<Type, object>> map, Type type, int id, bool clearFullScope)
+        {
+            if (map.ContainsKey(id))
+            {
+                if (clearFullScope)
+                {
+                    map.Remove(id);
+                }
+                else
+                {
+                    map[id].Remove(type);
+                }
+            }
         }
 
         private void StoreInstanceById<I>(I injected, int id, Dictionary<int, Dictionary<Type, object>> idInstancesMap)
@@ -99,11 +124,6 @@ namespace UniDI.Providers
             {
                 instancesMap.Add(typeof(I), injected);
             }
-        }
-
-        private Dictionary<int, Dictionary<Type, object>> GetIdInstancesMap(int id)
-        {
-            return _sceneIds.Contains(id) ? _sceneIdInstancesMap : _gameIdInstancesMap;
         }
     }
 }

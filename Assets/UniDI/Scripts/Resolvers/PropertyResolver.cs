@@ -14,7 +14,7 @@ namespace UniDI.Resolvers
         private readonly MethodInfo _baseResolveMethod;
         private readonly object[] _tempResolveParams = new object[3];
 
-        public PropertyResolver(ProvidersDto providersDto, BindingFlags flags)
+        internal PropertyResolver(ProvidersDto providersDto, BindingFlags flags)
         {
             _genericMethodsProvider = providersDto.GenericMethodsProvider;
             _memberInfoProvider = providersDto.MemberInfoProvider;
@@ -23,7 +23,7 @@ namespace UniDI.Resolvers
             _baseResolveMethod = GetType().GetMethod(nameof(ResolveProperty), flags);
         }
 
-        public void Resolve(object consumer, Type consumerType, int? id = null)
+        internal void Resolve(object consumer, Type consumerType, int? id = null)
         {
             var injectedProperties = _memberInfoProvider.GetPropertyInfos(consumerType);
             if (injectedProperties.Length == 0)

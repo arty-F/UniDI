@@ -15,27 +15,26 @@ namespace Assets.UniDITestScripts
             List<AllConsumer> allConsumers,
             Stopwatch timer)
         {
-            timer = new Stopwatch();
             timer.Start();
 
             foreach (var item in fieldsConsumers)
             {
-                item.Resolve();
+                item.Resolve(1);
             }
 
             foreach (var item in properiesConsumers)
             {
-                item.Resolve();
+                item.Resolve(1);
             }
 
             foreach (var item in methodConsumers)
             {
-                item.Resolve();
+                item.Resolve(1);
             }
 
             foreach (var item in allConsumers)
             {
-                item.Resolve();
+                item.Resolve(1);
             }
 
             timer.Stop();

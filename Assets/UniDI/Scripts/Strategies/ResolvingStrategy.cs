@@ -1,7 +1,7 @@
-﻿using UniDI.Providers;
+﻿using System.Reflection;
+using UniDI.Providers;
 using UniDI.Resolvers;
 using UniDI.Utils;
-using System.Reflection;
 
 namespace UniDI.Strategies
 {
@@ -18,7 +18,7 @@ namespace UniDI.Strategies
         private readonly PropertyResolver _propertyResolver;
         private readonly MethodResolver _methodResolver;
 
-        public ResolvingStrategy(InstancesProvider instancesStorage)
+        internal ResolvingStrategy(InstancesProvider instancesStorage)
         {
             _genericMethodsProvider = new GenericMethodsProvider();
             _settersProvider = new SettersProvider();
@@ -32,12 +32,12 @@ namespace UniDI.Strategies
             _methodResolver = new MethodResolver(providersDto, FLAGS);
         }
 
-        internal void Resolve(object consumer)
+        internal void Resolve(object consumer, int? id = null)
         {
             var consumerType = consumer.GetType();
-            _fieldResolver.Resolve(consumer, consumerType);
-            _propertyResolver.Resolve(consumer, consumerType);
-            _methodResolver.Resolve(consumer, consumerType);
+            _fieldResolver.Resolve(consumer, consumerType, id);
+            _propertyResolver.Resolve(consumer, consumerType, id);
+            _methodResolver.Resolve(consumer, consumerType, id);
         }
     }
 }

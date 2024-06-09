@@ -12,7 +12,7 @@ namespace UniDI.Resolvers
         private readonly SettersProvider _settersProvider;
         private readonly InstancesProvider _instancesProvider;
         private readonly MethodInfo _baseResolveMethod;
-        private readonly object[] _tempResolveParams3 = new object[3];
+        private readonly object[] _tempResolveParams = new object[3];
 
         internal FieldResolver(ProvidersDto providersDto, BindingFlags flags)
         {
@@ -31,13 +31,13 @@ namespace UniDI.Resolvers
                 return;
             }
 
-            _tempResolveParams3[0] = consumer;
-            _tempResolveParams3[2] = id;
+            _tempResolveParams[0] = consumer;
+            _tempResolveParams[2] = id;
             foreach (var injectedField in injectedFields)
             {
                 var resolveFieldMethod = _genericMethodsProvider.GetResolveFieldMethod(_baseResolveMethod, consumerType, injectedField);
-                _tempResolveParams3[1] = injectedField;
-                resolveFieldMethod.Invoke(this, _tempResolveParams3);
+                _tempResolveParams[1] = injectedField;
+                resolveFieldMethod.Invoke(this, _tempResolveParams);
             }
         }
 

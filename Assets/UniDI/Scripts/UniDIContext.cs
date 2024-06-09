@@ -1,10 +1,11 @@
-﻿using UniDI.Providers;
+﻿using System;
+using UniDI.Providers;
 using UniDI.Strategies;
 using UnityEngine.SceneManagement;
 
 namespace UniDI
 {
-    internal sealed class UniDIContext
+    internal class UniDIContext
     {
         private static UniDIContext _instance = null;
 
@@ -35,9 +36,29 @@ namespace UniDI
             _resolvingStrategy.Resolve(consumer);
         }
 
+        internal void Resolve(object consumer, int id)
+        {
+            _resolvingStrategy.Resolve(consumer, id);
+        }
+
         internal void Inject<I>(I injected, Lifetime lifetime)
         {
             _instancesProvider.Store(injected, lifetime);
+        }
+
+        internal void Inject<T>(T injected, int id, Lifetime lifetime)
+        {
+            _instancesProvider.Store(injected, id, lifetime);
+        }
+
+        internal void ReleaseDependency(Type type)
+        {
+            _instancesProvider.ClearInstances(type);
+        }
+
+        internal void ReleaseDependency(Type type, int id, bool clearFullScope)
+        {
+            _instancesProvider.ClearInstancesById(type, id, clearFullScope);
         }
 
         private void OnActiveSceneChanged(Scene current, Scene next)
