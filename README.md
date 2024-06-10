@@ -75,7 +75,7 @@ InjectedComponent typedInstance = Instantiate(_typedPrefab);
 typedInstance.Inject();
 ```
 
-3. Resolve dependencies of injection consumer classes by invoking `Resolve()` method. Or you can use `GameObject` extension method on prefab to one row instantiate and resolving dependencies (has 9 overloads like original Instantiate method).
+3. Resolve dependencies of injection consumer classes by invoking `Resolve()` method. Or you can use `GameObject` extension method on prefab to one row instantiate and resolving dependencies (has 9 overloads like original Instantiate method). After `GameObject` resolving all injected dependencies will be available in `Start` method (in `Awake` and `OnEnable` they still will be `null`).
 ```csharp
 using UniDI;
 ...
