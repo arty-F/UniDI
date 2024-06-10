@@ -1,10 +1,8 @@
-﻿using UniDI;
-using UniDI.Test;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
-namespace Assets.UniDITestScripts
+namespace UniDI.Test
 {
     public class PerformanceTester : MonoBehaviour
     {

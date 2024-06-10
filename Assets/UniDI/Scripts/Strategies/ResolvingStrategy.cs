@@ -39,5 +39,20 @@ namespace UniDI.Strategies
             _propertyResolver.Resolve(consumer, consumerType, id);
             _methodResolver.Resolve(consumer, consumerType, id);
         }
+
+        internal void ClearGlobalCache()
+        {
+            _methodResolver.ClearGlobalCache();
+        }
+
+        internal void ClearLocalCache()
+        {
+            _methodResolver.ClearLocalCache();
+        }
+
+        internal void ClearLocalCache(int id)
+        {
+            _methodResolver.ClearLocalCache(id);
+        }
     }
 }

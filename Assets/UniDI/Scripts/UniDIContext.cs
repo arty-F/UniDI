@@ -54,16 +54,20 @@ namespace UniDI
         internal void ReleaseDependency(Type type)
         {
             _instancesProvider.ClearInstances(type);
+            _resolvingStrategy.ClearGlobalCache();
         }
 
         internal void ReleaseDependency(Type type, int id, bool clearFullScope)
         {
             _instancesProvider.ClearInstancesById(type, id, clearFullScope);
+            _resolvingStrategy.ClearLocalCache(id);
         }
 
         private void OnActiveSceneChanged(Scene current, Scene next)
         {
             _instancesProvider.ClearSceneInstances();
+            _resolvingStrategy.ClearGlobalCache();
+            _resolvingStrategy.ClearLocalCache();
         }
     }
 }
