@@ -45,7 +45,7 @@ namespace UniDI.Providers
             {
                 return (I)_sceneInstancesMap[type];
             }
-            throw new UniDIException($"Type of {type.Name} has not yet been injected.");
+            throw new UniDIException($"Type of {type.FullName} has not yet been injected.");
         }
 
         internal I GetInstance<I>(Type type, int id)
