@@ -1,6 +1,8 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using UniDI.Providers;
 using UniDI.Resolvers;
+using UniDI.Settings;
 using UniDI.Utils;
 
 namespace UniDI.Strategies
@@ -18,18 +20,18 @@ namespace UniDI.Strategies
         private readonly PropertyResolver _propertyResolver;
         private readonly MethodResolver _methodResolver;
 
-        internal ResolvingStrategy(InstancesProvider instancesStorage)
+        internal ResolvingStrategy(InstancesProvider instancesStorage, UniDISettings settings)
         {
-            _genericMethodsProvider = new GenericMethodsProvider();
-            _settersProvider = new SettersProvider();
-            _memberInfoProvider = new MemberInfoProvider(FLAGS);
+            _genericMethodsProvider = new GenericMethodsProvider(settings);
+            _settersProvider = new SettersProvider(settings);
+            _memberInfoProvider = new MemberInfoProvider(settings, FLAGS);
             _instancesProvider = instancesStorage;
-            _parameterTypesProvider = new ParameterTypesProvider();
+            _parameterTypesProvider = new ParameterTypesProvider(settings);
 
             var providersDto = new ProvidersDto(_genericMethodsProvider, _settersProvider, _memberInfoProvider, _instancesProvider, _parameterTypesProvider);
             _fieldResolver = new FieldResolver(providersDto, FLAGS);
             _propertyResolver = new PropertyResolver(providersDto, FLAGS);
-            _methodResolver = new MethodResolver(providersDto, FLAGS);
+            _methodResolver = new MethodResolver(settings, providersDto, FLAGS);
         }
 
         internal void Resolve(object consumer, int? id = null)
@@ -53,6 +55,11 @@ namespace UniDI.Strategies
         internal void ClearLocalCache(int id)
         {
             _methodResolver.ClearLocalCache(id);
+        }
+
+        internal void ClearCacheForParameterType(Type type, int? id = null)
+        {
+            _methodResolver.ClearCacheForParameterType(type, id);
         }
     }
 }

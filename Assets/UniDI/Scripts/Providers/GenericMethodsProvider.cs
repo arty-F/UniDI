@@ -1,16 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UniDI.Settings;
 
 namespace UniDI.Providers
 {
     internal class GenericMethodsProvider
     {
-        private readonly Dictionary<Tuple<MethodInfo, Type>, MethodInfo> _oneTParameterMap = new();
-        private readonly Dictionary<Tuple<MethodInfo, Type, Type>, MethodInfo> _twoTParameterMap = new();
+        private readonly Dictionary<Tuple<MethodInfo, Type>, MethodInfo> _oneTParameterMap;
+        private readonly Dictionary<Tuple<MethodInfo, Type, Type>, MethodInfo> _twoTParameterMap;
 
         private readonly Type[] _tempOneParameters = new Type[1];
         private readonly Type[] _tempTwoParameters = new Type[2];
+
+        public GenericMethodsProvider(UniDISettings settings)
+        {
+            _oneTParameterMap = new(settings.InjectedMethods);
+            _twoTParameterMap = new(settings.InjectedFields + settings.InjectedProperties);
+        }
 
         internal MethodInfo GetResolveFieldMethod(MethodInfo baseResolveMethod, Type consumer, FieldInfo injectedField)
         {

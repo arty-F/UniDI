@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using UniDI.Settings;
 
 namespace UniDI.Providers
 {
     internal class SettersProvider
     {
         private readonly Dictionary<FieldInfo, object> _fieldSetters = new();
-        private readonly Dictionary<MethodInfo, object> _methodSetters = new();
         private readonly Dictionary<PropertyInfo, object> _propertySetters = new();
+
+        public SettersProvider(UniDISettings settings)
+        {
+            _fieldSetters = new(settings.InjectedFields);
+            _propertySetters = new(settings.InjectedProperties);
+        }
 
         internal Action<C, I> GetFieldSetter<C, I>(FieldInfo field)
         {
@@ -32,16 +38,6 @@ namespace UniDI.Providers
                 gen.Emit(OpCodes.Ret);
                 setter = setterMethod.CreateDelegate(typeof(Action<C, I>));
                 _fieldSetters.Add(field, setter);
-            }
-            return (Action<C, I>)setter;
-        }
-
-        internal Action<C, I> GetMethodSetter<C, I>(MethodInfo method)
-        {
-            if (!_methodSetters.TryGetValue(method, out object setter))
-            {
-                setter = Delegate.CreateDelegate(typeof(Action<C, I>), null, method);
-                _methodSetters.Add(method, setter);
             }
             return (Action<C, I>)setter;
         }

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
 using UniDI.Providers;
+using UniDI.Settings;
 using UniDI.Strategies;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace UniDI
@@ -24,10 +28,12 @@ namespace UniDI
         private ResolvingStrategy _resolvingStrategy;
         private InstancesProvider _instancesProvider;
 
-        private UniDIContext() 
+        private UniDIContext()
         {
-            _instancesProvider = new InstancesProvider();
-            _resolvingStrategy = new ResolvingStrategy(_instancesProvider);
+            var settings = UniDISettings.GetInstance();
+
+            _instancesProvider = new InstancesProvider(settings);
+            _resolvingStrategy = new ResolvingStrategy(_instancesProvider, settings);
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
         }
 
@@ -43,12 +49,18 @@ namespace UniDI
 
         internal void Inject<I>(I injected, Lifetime lifetime)
         {
-            _instancesProvider.Store(injected, lifetime);
+            if (_instancesProvider.Store(injected, lifetime))
+            {
+                _resolvingStrategy.ClearCacheForParameterType(typeof(I));
+            }
         }
 
-        internal void Inject<T>(T injected, int id, Lifetime lifetime)
+        internal void Inject<I>(I injected, int id, Lifetime lifetime)
         {
-            _instancesProvider.Store(injected, id, lifetime);
+            if (_instancesProvider.Store(injected, id, lifetime))
+            {
+                _resolvingStrategy.ClearCacheForParameterType(typeof(I), id);
+            }
         }
 
         internal void ReleaseDependency(Type type)

@@ -1,37 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using UniDI.Settings;
 using UnityEngine;
 
 namespace UniDI.Providers
 {
     internal class InstancesProvider
     {
-        private readonly Dictionary<Type, object> _gameInstancesMap = new();
-        private readonly Dictionary<Type, object> _sceneInstancesMap = new();
-        private readonly Dictionary<int, Dictionary<Type, object>> _gameIdInstancesMap = new();
-        private readonly Dictionary<int, Dictionary<Type, object>> _sceneIdInstancesMap = new();
+        private readonly UniDISettings _settings;
+        private readonly Dictionary<Type, object> _gameInstancesMap;
+        private readonly Dictionary<Type, object> _sceneInstancesMap;
+        private readonly Dictionary<int, Dictionary<Type, object>> _gameIdInstancesMap;
+        private readonly Dictionary<int, Dictionary<Type, object>> _sceneIdInstancesMap;
 
-        internal void Store<I>(I injected, Lifetime lifetime)
+        public InstancesProvider(UniDISettings settings)
+        {
+            _settings = settings;
+            _gameInstancesMap = new(settings.GameInstances);
+            _sceneInstancesMap = new(settings.SceneInstances);
+            _gameIdInstancesMap = new(settings.LocalScopes);
+            _sceneIdInstancesMap = new(settings.LocalScopes);
+        }
+
+        internal bool Store<I>(I injected, Lifetime lifetime)
         {
             if (lifetime == Lifetime.Game)
             {
-                StoreInstance(injected, _gameInstancesMap, typeof(I));
+                return StoreInstance(injected, _gameInstancesMap, typeof(I));
             }
             else
             {
-                StoreInstance(injected, _sceneInstancesMap, typeof(I));
+                return StoreInstance(injected, _sceneInstancesMap, typeof(I));
             }
         }
 
-        internal void Store<I>(I injected, int id, Lifetime lifetime)
+        internal bool Store<I>(I injected, int id, Lifetime lifetime)
         {
             if (lifetime == Lifetime.Game)
             {
-                StoreInstanceById(injected, id, _gameIdInstancesMap);
+                return StoreInstanceById(injected, id, _gameIdInstancesMap, _settings.GameLocalInstances);
             }
             else
             {
-                StoreInstanceById(injected, id, _sceneIdInstancesMap);
+                return StoreInstanceById(injected, id, _sceneIdInstancesMap, _settings.SceneLocalInstances);
             }
         }
 
@@ -102,16 +113,16 @@ namespace UniDI.Providers
             }
         }
 
-        private void StoreInstanceById<I>(I injected, int id, Dictionary<int, Dictionary<Type, object>> idInstancesMap)
+        private bool StoreInstanceById<I>(I injected, int id, Dictionary<int, Dictionary<Type, object>> idInstancesMap, int capacity)
         {
             if (!idInstancesMap.ContainsKey(id))
             {
-                idInstancesMap.Add(id, new Dictionary<Type, object>());
+                idInstancesMap.Add(id, new Dictionary<Type, object>(capacity));
             }
-            StoreInstance(injected, idInstancesMap[id], typeof(I));
+            return StoreInstance(injected, idInstancesMap[id], typeof(I));
         }
 
-        private void StoreInstance<I>(I injected, Dictionary<Type, object> instancesMap, Type type)
+        private bool StoreInstance<I>(I injected, Dictionary<Type, object> instancesMap, Type type)
         {
             if (instancesMap.ContainsKey(type))
             {
@@ -119,10 +130,12 @@ namespace UniDI.Providers
                 Debug.Log($"Type {type.Name} are reinjected.");
 #endif
                 instancesMap[type] = injected;
+                return true;
             }
             else
             {
                 instancesMap.Add(typeof(I), injected);
+                return false;
             }
         }
     }

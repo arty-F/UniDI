@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UniDI.Settings;
 
 namespace UniDI.Providers
 {
@@ -9,15 +10,18 @@ namespace UniDI.Providers
         private const int TEMP_LIST_SIZE = 10;
 
         private readonly BindingFlags _flags;
-        private readonly Dictionary<Type, FieldInfo[]> _fieldInfoMap = new();
-        private readonly Dictionary<Type, PropertyInfo[]> _propertyInfoMap = new();
-        private readonly Dictionary<Type, MethodInfo[]> _methodInfoMap = new();
+        private readonly Dictionary<Type, FieldInfo[]> _fieldInfoMap;
+        private readonly Dictionary<Type, PropertyInfo[]> _propertyInfoMap;
+        private readonly Dictionary<Type, MethodInfo[]> _methodInfoMap;
         private readonly List<FieldInfo> _tempFieldsInfo;
         private readonly List<PropertyInfo> _tempPropertiesInfo;
         private readonly List<MethodInfo> _tempMethodsInfo;
 
-        internal MemberInfoProvider(BindingFlags flags, int tempListSize = TEMP_LIST_SIZE)
+        internal MemberInfoProvider(UniDISettings settings, BindingFlags flags, int tempListSize = TEMP_LIST_SIZE)
         {
+            _fieldInfoMap = new(settings.InjectedFields);
+            _propertyInfoMap = new(settings.InjectedProperties);
+            _methodInfoMap = new(settings.InjectedMethods);
             _flags = flags;
             _tempFieldsInfo = new(tempListSize);
             _tempPropertiesInfo = new(tempListSize);

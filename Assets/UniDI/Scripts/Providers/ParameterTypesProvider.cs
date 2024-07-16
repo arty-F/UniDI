@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UniDI.Settings;
 
 namespace UniDI.Providers
 {
     internal class ParameterTypesProvider
     {
-        private readonly Dictionary<MethodInfo, Type[]> _parameterTypeMap = new();
+        private readonly Dictionary<MethodInfo, Type[]> _parameterTypeMap;
+
+        public ParameterTypesProvider(UniDISettings settings)
+        {
+            _parameterTypeMap = new(settings.InjectedMethods);
+        }
 
         internal Type[] GetParameterTypes(MethodInfo methodInfo)
         {
