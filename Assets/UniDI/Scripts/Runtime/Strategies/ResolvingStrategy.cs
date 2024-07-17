@@ -20,12 +20,12 @@ namespace UniDI.Strategies
         private readonly PropertyResolver _propertyResolver;
         private readonly MethodResolver _methodResolver;
 
-        internal ResolvingStrategy(InstancesProvider instancesStorage, UniDISettings settings)
+        internal ResolvingStrategy(InstancesProvider instancesProvider, UniDISettings settings)
         {
             _genericMethodsProvider = new GenericMethodsProvider(settings);
             _settersProvider = new SettersProvider(settings);
             _memberInfoProvider = new MemberInfoProvider(settings, FLAGS);
-            _instancesProvider = instancesStorage;
+            _instancesProvider = instancesProvider;
             _parameterTypesProvider = new ParameterTypesProvider(settings);
 
             var providersDto = new ProvidersDto(_genericMethodsProvider, _settersProvider, _memberInfoProvider, _instancesProvider, _parameterTypesProvider);

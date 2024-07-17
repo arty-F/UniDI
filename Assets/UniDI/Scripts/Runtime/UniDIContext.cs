@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 using UniDI.Providers;
 using UniDI.Settings;
 using UniDI.Strategies;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -30,8 +28,11 @@ namespace UniDI
 
         private UniDIContext()
         {
-            var settings = UniDISettings.GetInstance();
-
+            var settings = Resources.Load<UniDISettings>(nameof(UniDISettings));
+            if (settings == null)
+            {
+                throw new UniDIException("Can't load settings. Please try to reimport package.");
+            }
             _instancesProvider = new InstancesProvider(settings);
             _resolvingStrategy = new ResolvingStrategy(_instancesProvider, settings);
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
