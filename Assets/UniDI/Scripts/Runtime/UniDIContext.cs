@@ -28,11 +28,7 @@ namespace UniDI
 
         private UniDIContext()
         {
-            var settings = Resources.Load<UniDISettings>(nameof(UniDISettings));
-            if (settings == null)
-            {
-                throw new UniDIException("Can't load settings. Please try to reimport package.");
-            }
+            var settings = UniDISettings.GetSettings();
             _instancesProvider = new InstancesProvider(settings);
             _resolvingStrategy = new ResolvingStrategy(_instancesProvider, settings);
             SceneManager.activeSceneChanged += OnActiveSceneChanged;

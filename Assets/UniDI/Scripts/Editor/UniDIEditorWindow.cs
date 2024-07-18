@@ -25,11 +25,13 @@ namespace UniDI.Editor
         private const string INJECTED_PROPERTIES_TIP = "Count of global and local scope properties marked as [Inject].";
         private const string INJECTED_METHODS_TIP = "Count of global scope methods marked as [Inject].";
         private const string INJECTED_LOCAL_METHODS_TIP = "Count of local scope methods marked as [Inject] for each scope.";
+        private const string DEBUG_SETTINGS = "Debug settings";
+        private const string REINJECT_LOG_TIP = "Show log info in to debug window when you reinject any instance. Works in editor only.";
 
         [MenuItem("Tools/UniDI/Settings")]
         public static void Open()
         {
-            var settings = GetSettings();
+            _settings = UniDISettings.GetSettings();
             GetWindow<UniDIEditorWindow>(WINDOW_NAME);
         }
 
@@ -43,28 +45,15 @@ namespace UniDI.Editor
             _settings.GameLocalInstances = EditorGUILayout.IntField(new GUIContent(nameof(_settings.GameLocalInstances), GAME_LOCAL_INSTANCES_TIP), _settings.GameLocalInstances);
             _settings.SceneInstances = EditorGUILayout.IntField(new GUIContent(nameof(_settings.SceneInstances), SCENE_INSTANCES_TIP), _settings.SceneInstances);
             _settings.SceneLocalInstances = EditorGUILayout.IntField(new GUIContent(nameof(_settings.SceneLocalInstances), SCENE_LOCAL_INSTANCES_TIP), _settings.SceneLocalInstances);
-            GUILayout.Label(INJECTION_USAGE_COUNT_SETTINGS, EditorStyles.boldLabel);
             EditorGUILayout.Space();
+            GUILayout.Label(INJECTION_USAGE_COUNT_SETTINGS, EditorStyles.boldLabel);
             _settings.InjectedFields = EditorGUILayout.IntField(new GUIContent(nameof(_settings.InjectedFields), INJECTED_FIELDS_TIP), _settings.InjectedFields);
             _settings.InjectedProperties = EditorGUILayout.IntField(new GUIContent(nameof(_settings.InjectedProperties), INJECTED_PROPERTIES_TIP), _settings.InjectedProperties);
             _settings.InjectedMethods = EditorGUILayout.IntField(new GUIContent(nameof(_settings.InjectedMethods), INJECTED_METHODS_TIP), _settings.InjectedMethods);
             _settings.InjectedLocalMethods = EditorGUILayout.IntField(new GUIContent(nameof(_settings.InjectedLocalMethods), INJECTED_LOCAL_METHODS_TIP), _settings.InjectedLocalMethods);
-        }
-
-        private static UniDISettings GetSettings()
-        {
-            if (_settings != null)
-            {
-                return _settings;
-            }
-
-            _settings = Resources.Load<UniDISettings>(nameof(UniDISettings));
-            if (_settings == null)
-            {
-                throw new UniDIException("Can't load settings. Please try to reimport package.");
-            }
-
-            return _settings;
+            EditorGUILayout.Space();
+            GUILayout.Label(DEBUG_SETTINGS, EditorStyles.boldLabel);
+            _settings.ShowReinjectLog = EditorGUILayout.Toggle(new GUIContent(nameof(_settings.ShowReinjectLog), REINJECT_LOG_TIP), _settings.ShowReinjectLog);
         }
     }
 }

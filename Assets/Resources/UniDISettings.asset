@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7edae504c51693340ad6e9e1c362d4aa, type: 3}
   m_Name: UniDISettings
   m_EditorClassIdentifier: 
-  _localScopes: 16
-  _gameInstances: 256
-  _sceneInstances: 64
-  _gameLocalInstances: 128
-  _sceneLocalInstances: 32
-  _injectedFields: 128
-  _injectedProperties: 128
-  _injectedMethods: 128
-  _injectedLocalMethods: 32
+  LocalScopes: 16
+  GameInstances: 256
+  SceneInstances: 64
+  GameLocalInstances: 128
+  SceneLocalInstances: 32
+  InjectedFields: 128
+  InjectedProperties: 128
+  InjectedMethods: 128
+  InjectedLocalMethods: 32

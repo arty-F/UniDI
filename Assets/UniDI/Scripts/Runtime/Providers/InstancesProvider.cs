@@ -127,7 +127,10 @@ namespace UniDI.Providers
             if (instancesMap.ContainsKey(type))
             {
 #if UNITY_EDITOR
-                Debug.Log($"Type {type.Name} are reinjected.");
+                if (_settings.ShowReinjectLog)
+                {
+                    Debug.Log($"Type {type.Name} are reinjected.");
+                }
 #endif
                 instancesMap[type] = injected;
                 return true;
