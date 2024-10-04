@@ -1,4 +1,5 @@
-﻿using UniDI.Settings;
+﻿#if UNITY_EDITOR
+using UniDI.Settings;
 using UnityEditor;
 using UnityEngine;
 
@@ -57,3 +58,4 @@ namespace UniDI.Editor
         }
     }
 }
+#endif
