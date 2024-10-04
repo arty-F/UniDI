@@ -141,6 +141,11 @@ localDependencyInstance1.ReleaseDependency(id);          //clear all dependencie
 localDependencyInstance2.ReleaseDependency(id, false);   //clear localDependencyInstance2 in specified local scope
 ```
 
+### Settings
+
+Optionally you can configure parameters of a library and get some performance boost. Settings window is located in the menu item `Tools` -> `UniDI` -> `Settings`. Basically, these settings control the number of different cached items collections that can hold before it needs to be resized.<br />
+![UniDiSettings](https://github.com/user-attachments/assets/0545e818-0ebf-4d1a-8364-fd892e353187)
+
 ## Performance
 
 ### Field Injection
