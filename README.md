@@ -148,7 +148,7 @@ Optionally you can configure parameters of a library and get some performance bo
 
 ## Performance
 
-### Field Injection
+### Field Injection and resolving
 
 four fields in instance, different types
 | | Time | GC Alloc |
@@ -157,7 +157,7 @@ four fields in instance, different types
 | 100 instances  | 15 ms  | 80 KB  |
 | 1000 instances  | 28 ms  | 389 KB  |
 
-### Property Injection
+### Property Injection and resolving
 
 four properties in instance, different types
 | | Time | GC Alloc |
@@ -166,7 +166,7 @@ four properties in instance, different types
 | 100 instances  | 6 ms  | 56 KB  |
 | 1000 instances  | 20 ms  | 365 KB  |
 
-### Method Injection
+### Method Injection and resolving
 
 four method parameters, different types
 | | Time | GC Alloc |
